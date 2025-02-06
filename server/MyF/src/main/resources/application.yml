@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: MyF
+  data:
+    mongodb:
+      authentication-database: admin
+      username: admin
+      password: IM4goPX7ALmPWN7S
+      database: myf
+      port: 27017
+      host: 130.61.246.28
+
+
