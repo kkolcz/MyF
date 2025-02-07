@@ -1,39 +1,61 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, signal } from '@angular/core';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { StompSubscription } from '@stomp/stompjs';
-// import { Task } from './task.model';
 
 export type ListenerCallBack = (message: any) => void;
+
+export interface IMessage {
+  sender: string;
+  content: string;
+  messageType: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService implements OnDestroy {
   private connection: CompatClient | undefined = undefined;
-
   private subscription: StompSubscription | undefined;
 
-  constructor() {
+  messages = signal<IMessage[]>([]);
+
+  constructor() {}
+
+  connect(username: string) {
     this.connection = Stomp.client('ws://localhost:8080/ws');
-    this.connection.connect({}, () => {});
+    this.connection.connect({}, () => {
+      console.log('Connected to the server');
+      this.connection!.send(
+        '/app/chat.addUser',
+        {},
+        JSON.stringify({ sender: username, type: 'JOIN' })
+      );
+      this.subscribeTopic((message) => {
+        // console.log('Received message:', message);
+      });
+    });
   }
 
-  connect() {}
-
-  public send(task: any): void {
+  sendMessage(message: any) {
     if (this.connection && this.connection.connected) {
-      this.connection.send('/dashboard/add_new_task', {}, JSON.stringify(task));
+      this.connection.send(
+        '/app/chat.sendMessage',
+        {},
+        JSON.stringify(message)
+      );
     }
   }
 
-  public listen(fun: ListenerCallBack): void {
-    if (this.connection) {
-      this.connection.connect({}, () => {
-        this.subscription = this.connection!.subscribe(
-          '/tasks/added_task',
-          (message) => fun(JSON.parse(message.body))
-        );
-      });
+  subscribeTopic(callback: ListenerCallBack) {
+    if (this.connection && this.connection.connected) {
+      this.subscription = this.connection.subscribe(
+        '/topic/public',
+        (message) => {
+          const parsedMessage = JSON.parse(message.body);
+
+          this.messages.update((messages) => [...messages, parsedMessage]);
+        }
+      );
     }
   }
 

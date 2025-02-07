@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, effect } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { WebsocketService } from '../../services/websocket.service';
+import { IMessage, WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'app-chat',
@@ -14,30 +14,34 @@ import { WebsocketService } from '../../services/websocket.service';
 export class ChatComponent implements OnInit, OnDestroy {
   usernameInput: string = '';
   username: string = '';
-  messages: any[] = [];
+  messages: IMessage[] = [];
   messageInput: string = '';
 
-  constructor(private websocketService: WebsocketService) {}
-
-  ngOnInit() {
-    this.websocketService.connect();
+  constructor(private websocketService: WebsocketService) {
+    effect(() => {
+      this.messages = this.websocketService.messages();
+      console.log('Nowe wiadomości:', this.messages);
+    });
   }
+
+  ngOnInit() {}
 
   ngOnDestroy() {}
 
   onUsernameSubmit() {
     if (this.usernameInput.trim()) {
       this.username = this.usernameInput;
+      this.websocketService.connect(this.username);
     }
   }
 
   sendMessage() {
-    const messageObj = {
+    const messageObj: IMessage = {
       sender: this.username,
       content: this.messageInput,
-      timestamp: new Date(),
+      messageType: 'CHAT',
     };
 
-    console.log(messageObj);
+    this.websocketService.sendMessage(messageObj);
   }
 }
