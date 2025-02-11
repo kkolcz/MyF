@@ -1,0 +1,42 @@
+<div class="login-container">
+  <div class="login-box">
+    <h2 class="text-center">Witaj ponownie!</h2>
+    <p class="text-center">Cieszymy się, że wracasz!</p>
+    <form>
+      <div class="form-group">
+        <label for="email">Adres e-mail</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Wprowadź e-mail"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Wprowadź hasło"
+        />
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        (click)="handleLogin()"
+      >
+        Zaloguj się
+      </button>
+    </form>
+    <div class="text-center mt-3">
+      <a [routerLink]="['/account/forgot-password']">Nie pamiętasz hasła?</a>
+    </div>
+    <div class="text-center mt-2">
+      <span
+        >Nie masz konta?
+        <a [routerLink]="['/account/register']">Zarejestruj się</a></span
+      >
+    </div>
+  </div>
+</div>
