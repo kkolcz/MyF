@@ -1,0 +1,23 @@
+<div
+  class="topic-bar-item"
+  (click)="onLeftClick()"
+  (contextmenu)="onRightClick($event)"
+>
+  <div
+    class="topic-status"
+    *ngIf="conversation.type === 'private'"
+    [ngClass]="{
+      online: conversation.isOnline,
+      offline: !conversation.isOnline
+    }"
+  ></div>
+  <div class="topic-info">
+    <p class="topic-name">{{ conversation.name }}</p>
+    <p
+      class="topic-last-seen"
+      *ngIf="conversation.type === 'private' && !conversation.isOnline"
+    >
+      Ostatnio widziany: {{ conversation.lastSeen | date : "short" }}
+    </p>
+  </div>
+</div>

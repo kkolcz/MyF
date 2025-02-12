@@ -1,0 +1,39 @@
+.topic-bar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.topic-bar-item:hover {
+  background-color: #696969;
+}
+
+.topic-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.topic-status.online {
+  background-color: green;
+}
+
+.topic-status.offline {
+  background-color: red;
+}
+
+.topic-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.topic-name {
+  font-weight: bold;
+}
+
+.topic-last-seen {
+  font-size: 0.8em;
+  color: gray;
+}

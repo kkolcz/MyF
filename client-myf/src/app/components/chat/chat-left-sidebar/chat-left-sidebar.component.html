@@ -6,5 +6,14 @@
       "
     ></i>
   </button>
-  <div class="sidebar-content"></div>
+  <div class="sidebar-content">
+    @if(!isCollapsed$()) { @for(conversation of conversations; track
+    conversation.id) {
+    <div>
+      <app-chat-topic-bar-item
+        [conversation]="conversation"
+      ></app-chat-topic-bar-item>
+    </div>
+    } }
+  </div>
 </div>
