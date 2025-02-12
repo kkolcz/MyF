@@ -1,0 +1,39 @@
+.user-bar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.user-bar-item:hover {
+  background-color: #696969;
+}
+
+.user-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-status.online {
+  background-color: green;
+}
+
+.user-status.offline {
+  background-color: red;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-nickname {
+  font-weight: bold;
+}
+
+.user-last-seen {
+  font-size: 0.8em;
+  color: gray;
+}
