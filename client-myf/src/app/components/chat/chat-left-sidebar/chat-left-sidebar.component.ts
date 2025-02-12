@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 
 @Component({
   selector: 'app-chat-left-sidebar',
@@ -9,9 +10,10 @@ import { Component } from '@angular/core';
   styleUrl: './chat-left-sidebar.component.scss',
 })
 export class ChatLeftSidebarComponent {
-  isCollapsed = false;
+  isCollapsed$ = computed(() => this.sidebarService.isCollapsedLeft$());
+  constructor(private sidebarService: SidebarService) {}
 
   toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
+    this.sidebarService.setCollapsedLeft(!this.isCollapsed$());
   }
 }

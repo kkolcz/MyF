@@ -2,7 +2,7 @@ import { Component, effect, OnDestroy, OnInit } from '@angular/core';
 import {
   IMessage,
   WebsocketService,
-} from '../../../services/websocket.service';
+} from '../../../_services/WebSocketService/websocket.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

@@ -1,7 +1,9 @@
-<div class="container-right-sidebar" [class.collapsed]="isCollapsed">
+<div class="container-right-sidebar" [class.collapsed]="isCollapsed$()">
   <button class="toggle-button" (click)="toggleSidebar()">
     <i
-      [class]="isCollapsed ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'"
+      [class]="
+        isCollapsed$() ? 'bi bi-arrow-bar-left' : 'bi bi-arrow-bar-right'
+      "
     ></i>
   </button>
   <div class="sidebar-content"></div>
