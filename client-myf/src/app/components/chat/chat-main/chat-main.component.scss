@@ -1,0 +1,34 @@
+.container-main-chat {
+  width: 60vw;
+  height: 100%;
+  padding: 20px;
+}
+
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+}
+
+.message-bubble {
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.my-message {
+  background-color: #007bff;
+  color: white;
+  float: right;
+  border-radius: 15px 15px 0 15px;
+}
+
+.other-message {
+  background-color: #e9ecef;
+  float: left;
+  border-radius: 15px 15px 15px 0;
+}
+
+.message-container {
+  clear: both;
+  margin-bottom: 15px;
+}

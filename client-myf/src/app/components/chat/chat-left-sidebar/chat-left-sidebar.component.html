@@ -1,0 +1,19 @@
+<div class="container-left-sidebar" [class.collapsed]="isCollapsed$()">
+  <button class="toggle-button" (click)="toggleSidebar()">
+    <i
+      [class]="
+        isCollapsed$() ? 'bi bi-arrow-bar-right' : 'bi bi-arrow-bar-left'
+      "
+    ></i>
+  </button>
+  <div class="sidebar-content">
+    @if(!isCollapsed$()) { @for(conversation of conversations; track
+    conversation.id) {
+    <div>
+      <app-chat-topic-bar-item
+        [conversation]="conversation"
+      ></app-chat-topic-bar-item>
+    </div>
+    } }
+  </div>
+</div>

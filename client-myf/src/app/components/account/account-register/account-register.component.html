@@ -1,0 +1,57 @@
+<div class="register-container">
+  <div class="register-box">
+    <h2 class="text-center">Zarejestruj się</h2>
+    <p class="text-center">Dołącz do nas już teraz!</p>
+    <form>
+      <div class="form-group">
+        <label for="username">Nazwa użytkownika</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          placeholder="Wprowadź nazwę użytkownika"
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Adres e-mail</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Wprowadź e-mail"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Wprowadź hasło"
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Potwierdź hasło</label>
+        <input
+          type="password"
+          class="form-control"
+          id="confirm-password"
+          placeholder="Potwierdź hasło"
+        />
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        (click)="handleRegister()"
+      >
+        Zarejestruj się
+      </button>
+    </form>
+    <div class="text-center mt-3">
+      <span
+        >Masz już konto?
+        <a [routerLink]="['/account/login']">Zaloguj się</a></span
+      >
+    </div>
+  </div>
+</div>

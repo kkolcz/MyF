@@ -1,0 +1,61 @@
+<div class="container-main-chat">
+  <!-- Sekcja nazwy użytkownika -->
+  <div class="row mb-4" *ngIf="!username">
+    <div class="col-md-6 offset-md-3">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Wpisz swoją nazwę użytkownika"
+          [(ngModel)]="usernameInput"
+          name="username"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-primary" (click)="onUsernameSubmit()">
+            Dołącz do chatu
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sekcja chatu -->
+  <div class="row" *ngIf="username">
+    <div class="col-md-8 offset-md-2">
+      <!-- Box z wiadomościami -->
+      <div class="chat-box border rounded p-3 mb-3" #scrollContainer>
+        <div class="message-container" *ngFor="let message of messages">
+          <div [ngClass]="{ 'text-end': message.sender === username }">
+            <small class="text-muted">{{ message.sender }}</small>
+            <div
+              [ngClass]="{
+                'my-message': message.sender === username,
+                'other-message': message.sender !== username
+              }"
+              class="message-bubble p-2 mb-2 rounded"
+            >
+              {{ message.content }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sekcja wysyłania wiadomości -->
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Napisz wiadomość..."
+          [(ngModel)]="messageInput"
+          (keyup.enter)="sendMessage()"
+          name="message"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-primary" (click)="sendMessage()">
+            Wyślij
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
