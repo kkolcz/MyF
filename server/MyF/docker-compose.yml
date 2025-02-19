@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: MyF
+    volumes:
+      - postgres:/data/postgres
+    networks:
+        - myf-network
+    restart: unless-stopped
+  keycloak:
+    container_name: keycloak-wac
+    image: quay.io/keycloak/keycloak:26.0.0
+    ports:
+        - "9090:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    networks:
+        - myf-network
+    command:
+      - "start-dev"
+
+
+networks:
+    myf-network:
+        driver: bridge
+
+volumes:
+    postgres:
+        driver: local
