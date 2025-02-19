@@ -1,13 +1,43 @@
 spring:
-  application:
-    name: MyF
-  data:
-    mongodb:
-      authentication-database: admin
-      username: admin
-      password: IM4goPX7ALmPWN7S
-      database: myf
-      port: 27017
-      host: 130.61.246.28
+  datasource:
+    url: jdbc:postgresql://localhost:5432/MyF
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        database-platform: postgresql
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    flyway:
+      enabled: false
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://localhost:9090/realms/MyF
+
+
+    servlet:
+      multipart:
+        max-file-size: 50MB
+
+
+springdoc:
+  default-produces-media-type: application/json
+
+
+application:
+  file:
+    upload:
+      media-output-path: ./uploads
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+
+
 
 
