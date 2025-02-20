@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 import { ChatTopicBarItemComponent } from '../chat-topic-bar-item/chat-topic-bar-item.component';
 import { ITopic } from '../../../_models/topic.model';
+import { ChatService } from '../../../_services/ChatService/chat.service';
 
 @Component({
   selector: 'app-chat-left-sidebar',
@@ -11,28 +12,22 @@ import { ITopic } from '../../../_models/topic.model';
   templateUrl: './chat-left-sidebar.component.html',
   styleUrl: './chat-left-sidebar.component.scss',
 })
-export class ChatLeftSidebarComponent {
+export class ChatLeftSidebarComponent implements OnInit {
   isCollapsed$ = computed(() => this.sidebarService.isCollapsedLeft$());
 
-  conversations: ITopic[] = [
-    { id: 0, type: 'group', name: 'Grupa Projektowa' },
-    {
-      id: 1,
-      type: 'private',
-      name: 'Jan Kowalski',
-      isOnline: true,
-      lastSeen: new Date(),
-    },
-    {
-      id: 2,
-      type: 'private',
-      name: 'Anna Nowak',
-      isOnline: false,
-      lastSeen: new Date(Date.now() - 3600 * 1000),
-    },
-  ];
+  conversations: ITopic[] = [];
 
-  constructor(private sidebarService: SidebarService) {}
+  constructor(
+    private sidebarService: SidebarService,
+    private chatService: ChatService
+  ) {}
+
+  ngOnInit(): void {
+    this.chatService.getAllChats().subscribe((data: ITopic[]) => {
+      console.log('All fetched topics:', data);
+      this.conversations = data;
+    });
+  }
 
   toggleSidebar() {
     this.sidebarService.setCollapsedLeft(!this.isCollapsed$());

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import { StompSubscription } from '@stomp/stompjs';
@@ -18,8 +19,6 @@ export class WebsocketService implements OnDestroy {
   private subscription: StompSubscription | undefined;
 
   messages = signal<IMessage[]>([]);
-
-  constructor() {}
 
   connect(username: string) {
     this.connection = Stomp.client('ws://localhost:8080/ws');
@@ -54,6 +53,18 @@ export class WebsocketService implements OnDestroy {
           const parsedMessage = JSON.parse(message.body);
 
           this.messages.update((messages) => [...messages, parsedMessage]);
+        }
+      );
+    }
+  }
+
+  subscribeContacts(callback: ListenerCallBack) {
+    if (this.connection && this.connection.connected) {
+      this.subscription = this.connection.subscribe(
+        '/topic/contacts',
+        (message) => {
+          const parsedMessage = JSON.parse(message.body);
+          callback(parsedMessage);
         }
       );
     }

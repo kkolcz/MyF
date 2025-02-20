@@ -5,11 +5,11 @@
 >
   <div
     class="user-status"
-    [ngClass]="{ online: user.isOnline, offline: !user.isOnline }"
+    [ngClass]="{ online: user.online, offline: !user.online }"
   ></div>
   <div class="user-info">
-    <p class="user-nickname">{{ user.nickname }}</p>
-    <p class="user-last-seen" *ngIf="!user.isOnline">
+    <p class="user-nickname">{{ user.firstName }} {{ user.lastname }}</p>
+    <p class="user-last-seen" *ngIf="true">
       Ostatnio widziany: {{ user.lastSeen | date : "short" }}
     </p>
   </div>
