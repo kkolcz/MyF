@@ -81,8 +81,9 @@ export class ChatService implements OnInit {
       chatId: this.currentChatId(),
     };
 
-    console.log('Message:', messageObj);
-    console.log('Current chat:', this.currentReceiverId());
+    console.log('newMessage:', messageObj);
+    console.log('Messages list:', this.currentChatMessages());
+    // console.log('Current chat:', this.currentReceiverId());
 
     this.http
       .post(`http://localhost:8080/api/v1/messages`, messageObj)
