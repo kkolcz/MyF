@@ -12,12 +12,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper  userMapper;
 
-    public List<UserResponse> getAllUsersExceptSelf(Authentication connectedUser){
-        return userRepository.findAllUsersExceptSelf(connectedUser.getName())
+
+    public List<UserResponse> getAllUsersExceptSelf(Authentication loggedUser){
+
+        return userRepository.findAllUsersExceptMyself(loggedUser.getName())
                 .stream()
-                .map(userMapper::toUserResponse)
+                .map(UserMapper::toUserResponse)
                 .toList();
+
     }
+
+
 }

@@ -1,20 +1,41 @@
 package dev.kubisiak.MyF.chat;
 
 
+import dev.kubisiak.MyF.user.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ChatMapper {
-    public ChatResponse toChatResponse(Chat chat, String senderId) {
+import java.time.LocalDateTime;
 
-      return ChatResponse.builder()
+@Service
+@RequiredArgsConstructor
+public class ChatMapper {
+    public ChatResponse mapToChatResponse(Chat chat, User authUser) {
+
+        return ChatResponse.builder()
                 .id(chat.getId())
-                .name(chat.getChatName(senderId))
-                .unreadCount(chat.getUnreadMessages(senderId))
-                .lastMessage(chat.getLastMessage())
-                .isRecipientOnline(chat.getRecipient().isUserOnline())
-                .senderId(chat.getSender().getId())
-                .receiverId(chat.getRecipient().getId())
+                .name(getChatName(chat, authUser))
+                .lastMessage(getLastMessage(chat))
+                .lastMessageTime(getLastMessageTime(chat))
+                .type(chat.getType())
                 .build();
     }
+
+
+    private String getLastMessage(Chat chat) {
+        return chat.getMessages().get(chat.getMessages().size()-1).getContent();
+    }
+
+    private LocalDateTime getLastMessageTime(Chat chat) {
+        return chat.getMessages().get(chat.getMessages().size()-1).getCreatedDate();
+    }
+
+    private String getChatName(Chat chat, User authUser) {
+        return chat.getUsers().stream()
+                .filter(user -> !user.getId().equals(authUser.getId()))
+                .findFirst()
+                .map(user -> user.getFirstName() + " " + user.getLastName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }

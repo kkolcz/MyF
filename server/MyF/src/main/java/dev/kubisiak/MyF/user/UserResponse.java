@@ -3,8 +3,6 @@ package dev.kubisiak.MyF.user;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,6 +14,4 @@ public class UserResponse {
     private String firstName;
     private String lastname;
     private String email;
-    private LocalDateTime lastSeen;
-    private boolean isOnline;
 }

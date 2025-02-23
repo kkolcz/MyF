@@ -1,6 +1,5 @@
 package dev.kubisiak.MyF.message;
 
-
 import lombok.*;
 
 @Getter
@@ -11,8 +10,6 @@ import lombok.*;
 public class MessageRequest {
 
     private String content;
-    private String senderId;
     private String receiverId;
-    private MessageType messageType;
     private String chatId;
 }

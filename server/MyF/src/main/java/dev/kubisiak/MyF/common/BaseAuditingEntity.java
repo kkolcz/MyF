@@ -1,5 +1,6 @@
 package dev.kubisiak.MyF.common;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseAuditingEntity {
+public class BaseAuditingEntity{
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)

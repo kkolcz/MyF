@@ -29,20 +29,17 @@ public class UserMapper {
             user.setEmail(attributes.get("email").toString());
         }
 
-        user.setLastSeen(LocalDateTime.now());
-
         return user;
 
     }
 
-    public UserResponse toUserResponse(User user) {
+    public static UserResponse toUserResponse(User user) {
+
         return UserResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastname(user.getLastName())
                 .email(user.getEmail())
-                .lastSeen(user.getLastSeen())
-                .isOnline(user.isUserOnline())
                 .build();
     }
 }
