@@ -19,7 +19,7 @@ public class ChatService {
     private final NotificationService notificationService;
 
 
-    public String createPrivateChat(String receiverId, Authentication authentication) {
+    public ChatResponse createPrivateChat(String receiverId, Authentication authentication) {
 
 
         User authUser = userRepository.findById(authentication.getName())
@@ -30,7 +30,11 @@ public class ChatService {
         //Check if chat already exists
         String chatId = checkIfChatExists(authUser, receiver);
         if (chatId != null) {
-            return chatId;
+            return ChatResponse.builder()
+                    .id(chatId)
+                    .name(receiver.getFirstName() + " " + receiver.getLastName())
+                    .type(ChatType.PRIVATE)
+                    .build();
         }
 
         Chat chat = new Chat();
@@ -41,7 +45,7 @@ public class ChatService {
 
         notificationService.sendNotificationThatChatWasCreated(authUser,receiver);
 
-        return chatFromRepository.getId();
+        return chatMapper.mapToChatResponse(chatFromRepository, authUser);
     }
 
     private String checkIfChatExists(User authUser, User receiver) {
