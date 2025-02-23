@@ -18,6 +18,11 @@ public class ChatMapper {
                 .lastMessage(getLastMessage(chat))
                 .lastMessageTime(getLastMessageTime(chat))
                 .type(chat.getType())
+                .users(chat.getUsers()
+                        .stream()
+                        .filter(user -> !user.getId().equals(authUser.getId()))
+                        .map(User::getId)
+                        .toList())
                 .build();
     }
 

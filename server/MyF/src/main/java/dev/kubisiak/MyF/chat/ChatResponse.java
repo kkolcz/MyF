@@ -3,6 +3,7 @@ package dev.kubisiak.MyF.chat;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,4 +17,5 @@ public class ChatResponse {
     private String lastMessage;
     private LocalDateTime lastMessageTime;
     private ChatType type;
+    private List<String> users;
 }
