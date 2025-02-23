@@ -19,7 +19,7 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("chat/create/private")
-    public ResponseEntity<String> joinChat(@RequestParam String receiverId, Authentication authentication) {
+    public ResponseEntity<String> joinChat(@RequestParam(name = "receiver-id") String receiverId, Authentication authentication) {
         String chatResponse = chatService.createPrivateChat(receiverId, authentication);
 
         return ResponseEntity.ok(chatResponse);
