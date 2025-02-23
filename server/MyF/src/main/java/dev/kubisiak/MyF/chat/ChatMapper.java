@@ -23,10 +23,16 @@ public class ChatMapper {
 
 
     private String getLastMessage(Chat chat) {
+        if(chat.getMessages().isEmpty()) {
+            return "";
+        }
         return chat.getMessages().get(chat.getMessages().size()-1).getContent();
     }
 
     private LocalDateTime getLastMessageTime(Chat chat) {
+        if(chat.getMessages().isEmpty()) {
+            return null;
+        }
         return chat.getMessages().get(chat.getMessages().size()-1).getCreatedDate();
     }
 
