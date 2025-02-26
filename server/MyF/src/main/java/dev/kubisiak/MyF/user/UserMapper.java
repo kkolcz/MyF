@@ -3,7 +3,6 @@ package dev.kubisiak.MyF.user;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -38,7 +37,7 @@ public class UserMapper {
         return UserResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
-                .lastname(user.getLastName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .build();
     }
