@@ -73,36 +73,36 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         messageConverters.add(converter);
         return false;
     }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-                    String destination = accessor.getDestination();
-                    if (destination != null && destination.startsWith("/chat/")) {
-                        String chatId = destination.split("/")[2];
-                        String userId = accessor.getUser().getName();
-                        log.info("User {} subscribed to chat {} from method configureClientInboundChannel", userId, chatId);
-                        if (!isUserAllowedInChat(chatId, userId)) {
-                            throw new IllegalArgumentException("User not allowed in chat");
-                        }
-                    }
-                }
-                return message;
-            }
-        });
-
-    }
-
-    private boolean isUserAllowedInChat(String chatId, String userId) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new RuntimeException("Chat not found"));
-        return chat.getUsers().stream()
-                .anyMatch(user -> user.getId().equals(userId));
-    }
+//
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(new ChannelInterceptor() {
+//            @Override
+//            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+//                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+//                    String destination = accessor.getDestination();
+//                    if (destination != null && destination.startsWith("/chat/")) {
+//                        String chatId = destination.split("/")[2];
+//                        String userId = accessor.getUser().getName();
+//                        log.info("User {} subscribed to chat {} from method configureClientInboundChannel", userId, chatId);
+//                        if (!isUserAllowedInChat(chatId, userId)) {
+//                            throw new IllegalArgumentException("User not allowed in chat");
+//                        }
+//                    }
+//                }
+//                return message;
+//            }
+//        });
+//
+//    }
+//
+//    private boolean isUserAllowedInChat(String chatId, String userId) {
+//        Chat chat = chatRepository.findById(chatId)
+//                .orElseThrow(() -> new RuntimeException("Chat not found"));
+//        return chat.getUsers().stream()
+//                .anyMatch(user -> user.getId().equals(userId));
+//    }
 
 }
 
