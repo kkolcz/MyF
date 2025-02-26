@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -18,9 +19,8 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void saveMessage(MessageRequest messageRequest) {
+    public void saveMessage(MessageRequest messageRequest, Authentication authentication) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Chat chat = chatRepository.findById(messageRequest.getChatId())
                 .orElseThrow(() -> new RuntimeException("Chat not found"));
@@ -30,8 +30,7 @@ public class MessageService {
         message.setContent(messageRequest.getContent());
         message.setState(MessageState.SENT);
         message.setChat(chat);
-        message.setSenderId(message.getSenderId());
-        message.setReceiverId(authentication.getName());
+        message.setSenderId(authentication.getName());
         message.setType(messageRequest.getType());
 
 

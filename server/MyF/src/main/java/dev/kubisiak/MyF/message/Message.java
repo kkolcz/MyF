@@ -32,7 +32,5 @@ public class Message extends BaseAuditingEntity {
 
     @Column(name = "sender_id", nullable = false)
     private String senderId;
-    @Column(name = "receiver_id", nullable = false)
-    private String receiverId;
 
 }

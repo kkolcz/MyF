@@ -9,7 +9,6 @@ public class MessageMapper {
                 .content(message.getContent())
                 .senderId(message.getSenderId())
                 .chatId(message.getChat().getId())
-                .receiverId(message.getReceiverId())
                 .type(message.getType())
                 .build();
     }

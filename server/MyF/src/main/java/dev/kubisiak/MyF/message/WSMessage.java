@@ -15,7 +15,6 @@ public class WSMessage {
     private String content;
     private String senderId;
     private String chatId;
-    private String receiverId;
     private MessageState state;
     private MessageType type;
 
