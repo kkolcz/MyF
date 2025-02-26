@@ -2,9 +2,9 @@ package dev.kubisiak.MyF.message;
 
 public class MessageMapper {
 
-    public static WSMessage mapToWSMessage(Message message) {
+    public static ResponseMessage mapToResponseMessage(Message message) {
 
-        return WSMessage.builder()
+        return ResponseMessage.builder()
                 .id(message.getId())
                 .content(message.getContent())
                 .senderId(message.getSenderId())

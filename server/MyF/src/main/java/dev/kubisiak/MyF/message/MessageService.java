@@ -5,10 +5,10 @@ import dev.kubisiak.MyF.chat.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -38,14 +38,23 @@ public class MessageService {
 
         Message messageFromRepository = messageRepository.save(message);
 
-        WSMessage wsMessage = MessageMapper.mapToWSMessage(messageFromRepository);
+        ResponseMessage responseMessage = MessageMapper.mapToResponseMessage(messageFromRepository);
 
 
         chat.getUsers().stream().forEach((user) -> {
-            log.info("Sending message to user {} with content {}", user.getId(), wsMessage.getContent());
-            simpMessagingTemplate.convertAndSendToUser(user.getId(), "/messages", wsMessage);
+            log.info("Sending message to user {} with content {}", user.getId(), responseMessage.getContent());
+            simpMessagingTemplate.convertAndSendToUser(user.getId(), "/messages", responseMessage);
         });
 
+
+    }
+
+    public List<ResponseMessage> findChatMessages(String chatId) {
+
+        return messageRepository.findMessagesByChatId(chatId)
+                .stream()
+                .map(MessageMapper::mapToResponseMessage)
+                .toList();
 
     }
 }

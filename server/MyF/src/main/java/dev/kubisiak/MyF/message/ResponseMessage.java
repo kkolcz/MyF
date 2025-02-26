@@ -1,15 +1,16 @@
 package dev.kubisiak.MyF.message;
 
 
-import dev.kubisiak.MyF.notification.NotificationType;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class WSMessage {
+public class ResponseMessage {
 
     private Long id;
     private String content;
@@ -17,5 +18,6 @@ public class WSMessage {
     private String chatId;
     private MessageState state;
     private MessageType type;
+    private LocalDateTime createdDate;
 
 }
