@@ -43,7 +43,8 @@ public class MessageService {
 
         chat.getUsers().stream().forEach((user) -> {
             log.info("Sending message to user {} with content {}", user.getId(), wsMessage.getContent());
-            simpMessagingTemplate.convertAndSendToUser(user.getId(), "/messages", wsMessage);
+//            simpMessagingTemplate.convertAndSendToUser(user.getId(), "/messages", wsMessage);
+            simpMessagingTemplate.convertAndSend("/topic/messages/"+user.getId(), wsMessage);
         });
 
 
