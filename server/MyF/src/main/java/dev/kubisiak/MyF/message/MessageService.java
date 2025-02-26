@@ -19,7 +19,7 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void saveMessage(MessageRequest messageRequest, Authentication authentication) {
+    public void saveMessage(MessageRequest messageRequest) {
 
 
         Chat chat = chatRepository.findById(messageRequest.getChatId())
@@ -30,7 +30,7 @@ public class MessageService {
         message.setContent(messageRequest.getContent());
         message.setState(MessageState.SENT);
         message.setChat(chat);
-        message.setSenderId(authentication.getName());
+        message.setSenderId(message.getSenderId());
         message.setType(messageRequest.getType());
 
 

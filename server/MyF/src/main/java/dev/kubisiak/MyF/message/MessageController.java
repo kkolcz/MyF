@@ -23,10 +23,8 @@ public class MessageController {
 
 
     @MessageMapping("/chat/sendMessage")
-    public void sendMessage(MessageRequest messageRequest, Message<?> message) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-        Authentication authentication = (Authentication) headerAccessor.getSessionAttributes().get("authentication");
-        messageService.saveMessage(messageRequest, authentication);
+    public void sendMessage(MessageRequest messageRequest) {
+        messageService.saveMessage(messageRequest);
     }
 
 
