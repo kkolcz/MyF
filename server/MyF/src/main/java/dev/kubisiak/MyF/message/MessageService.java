@@ -30,7 +30,7 @@ public class MessageService {
         message.setContent(messageRequest.getContent());
         message.setState(MessageState.SENT);
         message.setChat(chat);
-        message.setSenderId(message.getSenderId());
+        message.setSenderId(messageRequest.getSenderId());
         message.setType(messageRequest.getType());
 
 
