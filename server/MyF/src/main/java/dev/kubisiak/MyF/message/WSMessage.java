@@ -1,5 +1,7 @@
 package dev.kubisiak.MyF.message;
 
+
+import dev.kubisiak.MyF.notification.NotificationType;
 import lombok.*;
 
 @Getter
@@ -7,9 +9,14 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessageRequest {
+public class WSMessage {
 
+    private Long id;
     private String content;
+    private String senderId;
     private String chatId;
+    private String receiverId;
+    private MessageState state;
     private MessageType type;
+
 }

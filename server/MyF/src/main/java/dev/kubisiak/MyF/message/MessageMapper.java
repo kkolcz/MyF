@@ -1,15 +1,16 @@
 package dev.kubisiak.MyF.message;
 
 public class MessageMapper {
-    public static MessageResponse mapToMessageResponse(Message message) {
 
-        return MessageResponse.builder()
+    public static WSMessage mapToWSMessage(Message message) {
+
+        return WSMessage.builder()
                 .id(message.getId())
                 .content(message.getContent())
-                .state(message.getState())
                 .senderId(message.getSenderId())
+                .chatId(message.getChat().getId())
                 .receiverId(message.getReceiverId())
-                .createdAt(message.getCreatedDate())
+                .type(message.getType())
                 .build();
     }
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,11 +21,10 @@ public class MessageController {
 
 
     @MessageMapping("/chat.sendMessage/{chatId}")
-    @SendTo("/chat/{chatId}")
-    public MessageResponse sendMessage(@DestinationVariable String chatId,
+    public void sendMessage(@DestinationVariable String chatId,
                                        MessageRequest messageRequest,
                                        Authentication authentication) {
-        return messageService.saveMessage(messageRequest,authentication);
+        messageService.saveMessage(messageRequest,authentication);
     }
 
 
