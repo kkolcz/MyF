@@ -32,7 +32,7 @@ public class MessageController {
         messageService.saveMessage(messageRequest);
     }
 
-    @GetMapping("/chat/{chatId}")
+    @GetMapping("/chat/{chatId}/messages")
     public ResponseEntity<List<ResponseMessage>> getChatMessages(@PathVariable("chatId") String chatId){
         return ResponseEntity.ok(messageService.findChatMessages(chatId));
     }
