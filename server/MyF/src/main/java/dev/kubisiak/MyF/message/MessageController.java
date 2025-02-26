@@ -20,10 +20,9 @@ public class MessageController {
     private final MessageService messageService;
 
 
-    @MessageMapping("/chat.sendMessage/{chatId}")
-    public void sendMessage(@DestinationVariable String chatId,
-                                       MessageRequest messageRequest,
-                                       Authentication authentication) {
+    @MessageMapping("/chat/sendMessage")
+    public void sendMessage(MessageRequest messageRequest,
+                            Authentication authentication) {
         messageService.saveMessage(messageRequest,authentication);
     }
 
