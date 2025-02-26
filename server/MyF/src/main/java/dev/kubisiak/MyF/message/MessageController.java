@@ -21,9 +21,8 @@ public class MessageController {
 
 
     @MessageMapping("/chat/sendMessage")
-    public void sendMessage(MessageRequest messageRequest,
-                            Authentication authentication) {
-        messageService.saveMessage(messageRequest,authentication);
+    public void sendMessage(MessageRequest messageRequest) {
+        messageService.saveMessage(messageRequest);
     }
 
 
