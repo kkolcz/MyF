@@ -7,10 +7,14 @@
     ></i>
   </button>
   <div class="sidebar-content">
-    @if(!isCollapsed$()) { @for(user of users; track user.id) {
-    <div>
-      <app-chat-user-bar-item [user]="user"></app-chat-user-bar-item>
+    <div class="search-bar">
+      @if(!isCollapsed$()) {
+        <app-chat-user-bar-invitation />
+      @for(user of users; track user.id) {
+      <div>
+        <app-chat-user-bar-item [user]="user"></app-chat-user-bar-item>
+      </div>
+      } }
     </div>
-    } }
   </div>
 </div>

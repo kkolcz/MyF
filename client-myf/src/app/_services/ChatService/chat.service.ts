@@ -10,6 +10,7 @@ import {
   WebsocketService,
 } from '../WebSocketService/websocket.service';
 import { INewMessageRequest } from '../../_models/message.model';
+import { environment } from '../../../environments/environment.development';
 
 export interface IMessageSend {
   content: string;
@@ -96,7 +97,8 @@ export class ChatService implements OnInit {
 
   getMesseges(chatId: any) {
     return this.http.get(
-      `http://localhost:8080/api/v1/chat/${this.currentChatId()}/messages`
+      `${environment.API_URL}/chat/${this.currentChatId()}/messages`
+      // `${environment.apiUrl}/chat/${chatId}/messages`
     );
   }
 
