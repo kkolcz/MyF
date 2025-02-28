@@ -35,7 +35,7 @@ export class ChatRightSidebarComponent implements OnInit {
     {
       id: '0',
       firstName: 'Jan',
-      lastname: 'Kowalski',
+      lastName: 'Kowalski',
       email: 'test',
       lastSeen: '',
       online: true,

@@ -5,6 +5,11 @@ import { BehaviorSubject } from 'rxjs';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 import { ITopic } from '../../_models/topic.model';
 import { IToolbarUser } from '../../_models/user.model';
+import {
+  ISendNewMessage,
+  WebsocketService,
+} from '../WebSocketService/websocket.service';
+import { INewMessageRequest } from '../../_models/message.model';
 
 export interface IMessageSend {
   content: string;
@@ -12,6 +17,23 @@ export interface IMessageSend {
   receiverId: string;
   messageType: string;
   chatId: string;
+}
+
+export interface IResponseCreateChat {
+  id: string;
+  name: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  type: string;
+}
+
+export interface IChat {
+  id: string;
+  name: string;
+  lastMesage: string;
+  lastMessageTime: string;
+  type: string;
+  users: string[];
 }
 
 @Injectable({
@@ -28,7 +50,11 @@ export class ChatService implements OnInit {
     avatarUrl: '',
   });
 
-  constructor(private http: HttpClient, private keycloak: KeycloakService) {}
+  constructor(
+    private http: HttpClient,
+    private keycloak: KeycloakService,
+    private websocketService: WebsocketService
+  ) {}
 
   ngOnInit(): void {}
 
@@ -41,24 +67,26 @@ export class ChatService implements OnInit {
   }
 
   newChat(senderId: string, receiverId: string) {
-    return this.http.post(
-      `http://localhost:8080/api/v1/chats?sender-id=${senderId}&receiver-id=${receiverId}`,
+    return this.http.post<IResponseCreateChat>(
+      // `http://localhost:8080/api/v1/chats?sender-id=${senderId}&receiver-id=${receiverId}`,
+      `http://localhost:8080/api/v1/chat/create/private?receiver-id=${receiverId}`,
       {}
     );
   }
 
   setCurrentChat(chat: any) {
     console.log('Current chat:', chat);
-    this.currentChatId.set(chat);
+    this.currentChatId.set(chat.id);
+    console.log(chat);
+    this.currentReceiverId.set(chat.users[0]);
     this.getMesseges(this.currentChatId()).subscribe((data) => {
       console.log('Messages:', data);
       this.currentChatMessages.set(data);
     });
+    console.log('Current receiver:', this.currentReceiverId());
   }
 
   setCurrentReceiver(receiverId: ITopic) {
-    this.currentReceiverId.set(receiverId.receiverId);
-
     this.currentChatUser.set({
       fullNamed: receiverId.name,
       isOnline: receiverId.recipientOnline,
@@ -68,27 +96,17 @@ export class ChatService implements OnInit {
 
   getMesseges(chatId: any) {
     return this.http.get(
-      `http://localhost:8080/api/v1/messages/chat/${this.currentChatId()}`
+      `http://localhost:8080/api/v1/chat/${this.currentChatId()}/messages`
     );
   }
 
   sendMessage(message: IMessageSend) {
-    const messageObj: IMessageSend = {
+    const messageObj: ISendNewMessage = {
       content: message.content,
-      senderId: this.keycloak.userId,
-      receiverId: this.currentReceiverId(),
-      messageType: 'TEXT',
       chatId: this.currentChatId(),
+      type: 'TEXT',
     };
 
-    console.log('newMessage:', messageObj);
-    console.log('Messages list:', this.currentChatMessages());
-    // console.log('Current chat:', this.currentReceiverId());
-
-    this.http
-      .post(`http://localhost:8080/api/v1/messages`, messageObj)
-      .subscribe((data) => {
-        console.log('Message sent:', data);
-      });
+    this.websocketService.sendMessage(messageObj);
   }
 }

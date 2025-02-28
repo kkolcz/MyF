@@ -17,7 +17,7 @@ export class ChatTopicBarItemComponent {
 
   onLeftClick() {
     console.log('Left click on conversation:', this.conversation.id);
-    this.chatService.setCurrentChat(this.conversation.id);
+    this.chatService.setCurrentChat(this.conversation);
     // this.chatService.setCurrentReceiver(this.conversation.receiverId);
     this.chatService.setCurrentReceiver(this.conversation);
   }
