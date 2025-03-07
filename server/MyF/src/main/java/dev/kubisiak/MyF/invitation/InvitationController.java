@@ -20,7 +20,7 @@ public class InvitationController {
     private final InvitationService invitationService;
 
 
-    @PostMapping("/sendInvitation")
+    @PostMapping("/invitation/send")
     public ResponseEntity<InvitationResponse> sendInvitation(@RequestBody InvitationRequest invitationRequest, Authentication authentication){
 
 
