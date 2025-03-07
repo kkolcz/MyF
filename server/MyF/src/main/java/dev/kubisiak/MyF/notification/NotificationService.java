@@ -21,17 +21,50 @@ public class NotificationService {
 
     public void sendNotificationThatChatWasCreated(User sender, User receiver){
 
-            Notification senderNotificaiton = Notification.builder()
+            Notification receiverNotification = Notification.builder()
                         .content("You have been added to a new chat with " + receiver.getFirstName() + " " + receiver.getLastName())
                         .type(NotificationType.ADD_CHAT)
                         .build();
-            simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",senderNotificaiton);
+            simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
 
 
-                Notification.builder()
+            Notification senderNotification = Notification.builder()
                         .content("You have been added to a new chat with " + sender.getFirstName() + " " + sender.getLastName())
                         .type(NotificationType.ADD_CHAT)
                         .build();
-            simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",senderNotificaiton);
+            simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",senderNotification);
     }
+
+    public void sendNotificationThatUserSentInvitation(User sender, User receiver){
+
+        Notification receiverNotification = Notification.builder()
+                .content("You have been invited to a chat by " + sender.getFirstName() + " " + sender.getLastName())
+                .type(NotificationType.RECEIVED_INVITATION)
+                .build();
+        simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
+
+        Notification senderNotification = Notification.builder()
+                .content("You have invited " + sender.getFirstName() + " " + sender.getLastName() + " to a chat")
+                .type(NotificationType.SENT_INVITATION)
+                .build();
+
+        simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",receiverNotification);
+
+    }
+
+    public void sentNotificationThatUserAcceptedInvitation(User sender, User receiver){
+        Notification receiverNotification = Notification.builder()
+                .content("You have accepted an invitation to a chat with " + sender.getFirstName() + " " + sender.getLastName())
+                .type(NotificationType.ACCEPTED_INVITATION)
+                .build();
+        simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
+
+        Notification senderNotification = Notification.builder()
+                .content(receiver.getFirstName() + " " + receiver.getLastName() + " has accepted your invitation to a chat")
+                .type(NotificationType.ACCEPTED_INVITATION)
+                .build();
+        simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",senderNotification);
+    }
+
+
 }

@@ -2,10 +2,7 @@ package dev.kubisiak.MyF.user;
 
 import dev.kubisiak.MyF.chat.Chat;
 import dev.kubisiak.MyF.common.BaseAuditingEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,5 +27,13 @@ public class User extends BaseAuditingEntity {
 
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private List<User> friends;
 
 }

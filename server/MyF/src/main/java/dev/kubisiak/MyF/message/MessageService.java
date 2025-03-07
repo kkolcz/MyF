@@ -2,6 +2,7 @@ package dev.kubisiak.MyF.message;
 
 import dev.kubisiak.MyF.chat.Chat;
 import dev.kubisiak.MyF.chat.ChatRepository;
+import dev.kubisiak.MyF.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -19,6 +20,7 @@ public class MessageService {
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationService notificationService;
 
     @Transactional
     public void saveMessage(MessageRequest messageRequest) {

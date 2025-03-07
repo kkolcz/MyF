@@ -21,9 +21,13 @@ public class UserSynchronizer {
         log.info("Synchronizing user with IDP");
         getUserEmail(token).ifPresent(userEmail ->{
             log.info("Synchronizing user with email: {}", userEmail);
-//            Optional<User> optUser = userRepository.findByEmail(userEmail);
+            Optional<User> optUser = userRepository.findByEmail(userEmail);
             User user = userMapper.fromTokenAttributes(token.getClaims());
-//            optUser.ifPresent(value -> user.setId(value.getId()));
+            optUser.ifPresent(value ->{
+                user.setId(value.getId());
+                user.setFriends(value.getFriends());
+            });
+
 
             userRepository.save(user);
         });

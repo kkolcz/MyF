@@ -2,6 +2,7 @@ package dev.kubisiak.MyF.user;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -24,4 +26,15 @@ public class UserService {
     }
 
 
+    public List<UserResponse> getFriends(Authentication authentication) {
+
+
+        User user = userRepository.findById(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        log.info("Users: {}", user.getFriends());
+
+        return null;
+
+    }
 }
