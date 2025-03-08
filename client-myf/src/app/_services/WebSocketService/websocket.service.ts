@@ -19,6 +19,7 @@ export class WebsocketService implements OnInit, OnDestroy {
   private socketClient!: Client;
   private messageSubscription: StompSubscription | undefined;
   private messageHandler: ListenerCallBack | undefined;
+  private notificationHandler: ListenerCallBack | undefined;
 
   constructor(private keycloakService: KeycloakService) {}
 
@@ -32,12 +33,17 @@ export class WebsocketService implements OnInit, OnDestroy {
     this.messageHandler = handler;
   }
 
+  registerNotificationHandler(handler: ListenerCallBack) {
+    this.notificationHandler = handler;
+  }
+
   initWebSocket() {
     if (this.keycloakService.keycloak.tokenParsed?.sub) {
       // const subUrl = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/chat`;
       const subUrl = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/messages`;
+      const subUrl2 = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/notification`;
 
-      console.log('Bearer token: ', this.keycloakService.keycloak.token);
+      // console.log('Bearer token: ', this.keycloakService.keycloak.token);
 
       this.socketClient = new Client({
         brokerURL: 'ws://localhost:8080/ws',
@@ -58,7 +64,19 @@ export class WebsocketService implements OnInit, OnDestroy {
           (message: any) => {
             const parsedMessage: Notification = JSON.parse(message.body);
             if (this.messageHandler) {
+              console.log('WS: Message:', parsedMessage);
               this.messageHandler(parsedMessage);
+            }
+          }
+        );
+
+        this.messageSubscription = this.socketClient.subscribe(
+          subUrl2,
+          (message: any) => {
+            const parsedMessage: Notification = JSON.parse(message.body);
+            if (this.notificationHandler) {
+              console.log('WS: Notification:', parsedMessage);
+              this.notificationHandler(parsedMessage);
             }
           }
         );

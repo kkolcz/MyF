@@ -1,6 +1,12 @@
 export enum endpoints {
-  // FRIENDS
-  inviteFriend = 'friends/invite',
   // CHAT
-  chat = 'chat',
+  getChats = 'chat',
+  createChat = 'chat/create/private',
+  // FRIENDS
+  searchFriends = 'users',
+  inviteFriend = 'invitation/send',
+  receivedInvitations = 'invitations/received',
+  sendedInvitations = 'invitations/sent',
+  getFriends = 'user/friends',
+  updateInvitation = 'invitation',
 }

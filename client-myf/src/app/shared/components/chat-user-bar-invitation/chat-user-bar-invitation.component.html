@@ -9,4 +9,9 @@
     Dodaj
     <i class="bi bi-search"></i>
   </button>
+  @for(friend of foundedUsers; track friend.id) {
+  <div>
+    <app-friend-user-bar-item [user]="friend"></app-friend-user-bar-item>
+  </div>
+  }
 </div>
