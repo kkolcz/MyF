@@ -6,7 +6,7 @@ import { ChatService } from '../../../_services/ChatService/chat.service';
 import { IUser } from '../../../_models/user.model';
 import { FormsModule } from '@angular/forms';
 import { FriendsService } from '../../../_services/FriendsService/friends.service';
-import { ChatUserBarInvitationComponent } from '../../../shared/components/chat-user-bar-invitation/chat-user-bar-invitation.component';
+import { ChatUserBarInvitationComponent } from './chat-user-bar-invitation/chat-user-bar-invitation.component';
 
 @Component({
   selector: 'app-chat-right-sidebar',

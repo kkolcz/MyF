@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FriendsService } from '../../../_services/FriendsService/friends.service';
-import { ChatUserBarItemComponent } from '../chat-user-bar-item/chat-user-bar-item.component';
-import { ChatFriendBarItemComponent } from '../../../components/chat/chat-friend-bar-item/chat-friend-bar-item.component';
+import { FriendsService } from '../../../../_services/FriendsService/friends.service';
+import { ChatUserBarItemComponent } from '../../../../shared/components/chat-user-bar-item/chat-user-bar-item.component';
+import { ChatFriendBarItemComponent } from '../../chat-friend-bar-item/chat-friend-bar-item.component';
 
 @Component({
   selector: 'app-chat-user-bar-invitation',
