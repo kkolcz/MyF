@@ -33,7 +33,7 @@ public class InvitationService {
                 .orElseThrow(() -> new EntityNotFoundException("Invited user with id " + invitationRequest.getInvitedUserId() + " not found"));
 
         //Check if invitation was already sent
-        if (invitationRepository.findInvitationBySenderAndRecipient(sender, invitedUser).isPresent()) {
+        if (invitationRepository.findInvitationBySenderAndRecipient(sender, invitedUser).isPresent() || invitationRepository.findInvitationBySenderAndRecipient(invitedUser, sender).isPresent()) {
             throw new IllegalArgumentException("Invitation was already sent");
         }
 
