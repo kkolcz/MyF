@@ -1,17 +1,15 @@
-import { Component, computed, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ChatUserBarItemComponent } from './chat-user-bar-item/chat-user-bar-item.component';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 import { KeycloakService } from '../../../_utils/keycloak/keycloak.service';
 import { ChatService } from '../../../_services/ChatService/chat.service';
 import { IUser } from '../../../_models/user.model';
 import { FormsModule } from '@angular/forms';
-import {
-  FriendsService,
-  IINvMessage,
-} from '../../../_services/FriendsService/friends.service';
+import { FriendsService } from '../../../_services/FriendsService/friends.service';
 import { ChatUserBarInvitationComponent } from './chat-user-bar-invitation/chat-user-bar-invitation.component';
 import { ChatFriendBarItemComponent } from './chat-user-bar-friend-item/chat-friend-bar-item.component';
 import { ChatUserBarInvitationItemComponent } from './chat-user-bar-invitation-item/chat-user-bar-invitation-item.component';
+import { JsonPipe } from '@angular/common';
 
 interface IRecrivedInvitation {
   id: string;
@@ -36,13 +34,13 @@ interface IRecrivedInvitation {
     FormsModule,
     ChatUserBarInvitationComponent,
     ChatUserBarInvitationItemComponent,
+    JsonPipe,
   ],
   templateUrl: './chat-right-sidebar.component.html',
   styleUrl: './chat-right-sidebar.component.scss',
 })
 export class ChatRightSidebarComponent implements OnInit {
-  invitations: IINvMessage[] = [];
-  friends: any[] = [];
+  // friends: any[] = [];
   users: IUser[] = [];
 
   isCollapsed$ = computed(() => this.sidebarService.isCollapsedRight$());
@@ -50,9 +48,12 @@ export class ChatRightSidebarComponent implements OnInit {
   constructor(
     private sidebarService: SidebarService,
     private keycloak: KeycloakService,
-    private chatService: ChatService,
-    private friendsService: FriendsService
+    private chatService: ChatService
   ) {}
+
+  friendsService = inject(FriendsService);
+  invitations = this.friendsService.invitations;
+  friends = this.friendsService.friends;
 
   ngOnInit(): void {
     // this.chatService.getAllClients().subscribe((data) => {
@@ -60,11 +61,8 @@ export class ChatRightSidebarComponent implements OnInit {
     //   this.users = data as IUser[];
     // });
 
-    this.friendsService.getFriends().subscribe((data) => {
-      console.log('Friends:', data);
-      this.users = data as IUser[];
-      console.log('Userssssss:', this.users);
-    });
+    this.getInvitations();
+    this.getFriends();
 
     // this.friendsService.getReceivedInvitations().subscribe(
     //   (data) => {
@@ -88,7 +86,12 @@ export class ChatRightSidebarComponent implements OnInit {
   }
 
   getInvitations(): void {
-    this.friendsService.getReceivedInvitations()
+    this.friendsService.getReceivedInvitations();
+    this.friendsService.getSendedInvitations();
+  }
+
+  getFriends(): void {
+    this.friendsService.getFriends();
   }
 
   toggleSidebar(): void {

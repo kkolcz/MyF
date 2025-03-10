@@ -2,26 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { endpoints } from '../../_enums/endpoints.enum';
+import { IInvitation } from '../../_models/invitation.model';
+import { tap } from 'rxjs';
 import { IUser } from '../../_models/user.model';
-
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
-export interface IINvMessage {
-  id: string;
-  sender: IUser;
-  receiver: IUser;
-  status: 'PENDING' | 'SENT' | 'DELIVERED' | 'READ'; // Możesz dodać inne statusy, jeśli są potrzebne
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class FriendsService {
+  invitations = signal<IInvitation[]>([]);
+  friends = signal<IUser[]>([]);
+
   constructor(private http: HttpClient) {}
 
   sendInvitationById(id: string) {
@@ -34,26 +25,53 @@ export class FriendsService {
   }
 
   updateInvitation(id: string, status: string) {
-    return this.http.patch(
-      `${environment.API_URL}/${endpoints.updateInvitation}/${id}?newInvitationStatus=${status}`,
-      {}
-    );
+    if (status === 'ACCEPTED' || status === 'REJECTED') {
+      this.invitations.update((invitations) =>
+        invitations.filter((invitation) => invitation.id !== id)
+      );
+    }
+    return this.http
+      .patch(
+        `${environment.API_URL}/${endpoints.updateInvitation}/${id}?newInvitationStatus=${status}`,
+        {}
+      )
+      .pipe(tap((res) => {}));
   }
 
   getSendedInvitations() {
-    return this.http.get(
-      `${environment.API_URL}/${endpoints.sendedInvitations}`
-    );
+    return this.http
+      .get<IInvitation[]>(
+        `${environment.API_URL}/${endpoints.sendedInvitations}`
+      )
+      .subscribe({ next: (data) => {} });
   }
 
   getReceivedInvitations() {
-    return this.http.get<IINvMessage[]>(
-      `${environment.API_URL}/${endpoints.receivedInvitations}`
-    );
+    return this.http
+      .get<IInvitation[]>(
+        `${environment.API_URL}/${endpoints.receivedInvitations}`
+      )
+      .subscribe({
+        next: (data) => {
+          this.invitations.set(data);
+          // console.log('Received invitations:', data);
+        },
+      });
+  }
+
+  wsRecrivedNewInvitation(data: IInvitation) {
+    this.invitations.update((invitations) => [...invitations, data]);
   }
 
   getFriends() {
-    return this.http.get(`${environment.API_URL}/${endpoints.getFriends}`);
+    return this.http
+      .get<IUser[]>(`${environment.API_URL}/${endpoints.getFriends}`)
+      .subscribe({
+        next: (data) => {
+          console.log('Friends:', data);
+          this.friends.set(data);
+        },
+      });
   }
 
   searchFriends(name: string) {

@@ -1,8 +1,9 @@
-import { Injectable, OnDestroy, OnInit, signal } from '@angular/core';
+import { inject, Injectable, OnDestroy, OnInit, signal } from '@angular/core';
 import { StompSubscription } from '@stomp/stompjs';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 
 import { Client } from '@stomp/stompjs';
+import { FriendsService } from '../FriendsService/friends.service';
 
 export type ListenerCallBack = (message: any) => void;
 
@@ -18,10 +19,13 @@ export interface ISendNewMessage {
 export class WebsocketService implements OnInit, OnDestroy {
   private socketClient!: Client;
   private messageSubscription: StompSubscription | undefined;
+  private notificationSubscription: StompSubscription | undefined;
   private messageHandler: ListenerCallBack | undefined;
   private notificationHandler: ListenerCallBack | undefined;
 
   constructor(private keycloakService: KeycloakService) {}
+
+  friendsService = inject(FriendsService);
 
   messages = signal<ISendNewMessage[]>([]);
 
@@ -39,11 +43,8 @@ export class WebsocketService implements OnInit, OnDestroy {
 
   initWebSocket() {
     if (this.keycloakService.keycloak.tokenParsed?.sub) {
-      // const subUrl = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/chat`;
-      const subUrl = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/messages`;
-      const subUrl2 = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/notification`;
-
-      // console.log('Bearer token: ', this.keycloakService.keycloak.token);
+      const ws_messages = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/messages`;
+      const ws_notifications = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/notification`;
 
       this.socketClient = new Client({
         brokerURL: 'ws://localhost:8080/ws',
@@ -60,7 +61,7 @@ export class WebsocketService implements OnInit, OnDestroy {
 
       this.socketClient.onConnect = (frame) => {
         this.messageSubscription = this.socketClient.subscribe(
-          subUrl,
+          ws_messages,
           (message: any) => {
             const parsedMessage: Notification = JSON.parse(message.body);
             if (this.messageHandler) {
@@ -70,12 +71,12 @@ export class WebsocketService implements OnInit, OnDestroy {
           }
         );
 
-        this.messageSubscription = this.socketClient.subscribe(
-          subUrl2,
+        this.notificationSubscription = this.socketClient.subscribe(
+          ws_notifications,
           (message: any) => {
             const parsedMessage: Notification = JSON.parse(message.body);
+            console.log('WS: Notification:', parsedMessage);
             if (this.notificationHandler) {
-              console.log('WS: Notification:', parsedMessage);
               this.notificationHandler(parsedMessage);
             }
           }
@@ -101,6 +102,10 @@ export class WebsocketService implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
+    }
+
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 }
