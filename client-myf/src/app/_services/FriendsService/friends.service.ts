@@ -1,11 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { endpoints } from '../../_enums/endpoints.enum';
-
-interface IInvitation {
-  email: string;
-}
+import { IUser } from '../../_models/user.model';
 
 interface User {
   id: string;
@@ -14,10 +11,10 @@ interface User {
   email: string;
 }
 
-interface Message {
+export interface IINvMessage {
   id: string;
-  sender: User;
-  receiver: User;
+  sender: IUser;
+  receiver: IUser;
   status: 'PENDING' | 'SENT' | 'DELIVERED' | 'READ'; // Możesz dodać inne statusy, jeśli są potrzebne
 }
 
@@ -38,7 +35,7 @@ export class FriendsService {
 
   updateInvitation(id: string, status: string) {
     return this.http.patch(
-      `${environment.API_URL}/${endpoints.updateInvitation}/${id}`,
+      `${environment.API_URL}/${endpoints.updateInvitation}/${id}?newInvitationStatus=${status}`,
       {}
     );
   }
@@ -50,7 +47,7 @@ export class FriendsService {
   }
 
   getReceivedInvitations() {
-    return this.http.get<Message>(
+    return this.http.get<IINvMessage[]>(
       `${environment.API_URL}/${endpoints.receivedInvitations}`
     );
   }

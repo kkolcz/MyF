@@ -4,9 +4,18 @@
   (contextmenu)="onRightClick($event)"
 >
   <div>
-    <button class="add-friend-button" (click)="addFriend()">
+    @if (isFounded) {
+    <button class="add-friend-button" (click)="addFriend($event)">
       <i class="bi bi-person-plus-fill"></i>
     </button>
+    } @if(isInvitation) {
+    <button class="add-friend-button" (click)="acceptFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    <button class="add-friend-button" (click)="rejectFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    }
   </div>
   <div
     class="user-status"

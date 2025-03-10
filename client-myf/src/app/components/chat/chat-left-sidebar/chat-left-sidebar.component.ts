@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, OnInit } from '@angular/core';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
-import { ChatTopicBarItemComponent } from '../../../shared/components/chat-topic-bar-item/chat-topic-bar-item.component';
+import { ChatTopicBarItemComponent } from './chat-topic-bar-item/chat-topic-bar-item.component';
 import { ITopic } from '../../../_models/topic.model';
 import { ChatService } from '../../../_services/ChatService/chat.service';
 

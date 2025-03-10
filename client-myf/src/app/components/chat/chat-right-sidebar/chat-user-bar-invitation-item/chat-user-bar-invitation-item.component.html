@@ -1,0 +1,21 @@
+<div
+  class="user-bar-item"
+  (click)="onLeftClick()"
+  (contextmenu)="onRightClick($event)"
+>
+  <div>
+    <button class="add-friend-button" (click)="acceptFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    <button class="add-friend-button" (click)="rejectFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+  </div>
+  <div class="user-status"></div>
+  <div class="user-info">
+    <p class="user-nickname">
+      {{ invitation.sender.firstName }} {{ invitation.sender.lastName }}
+    </p>
+    <p class="user-last-seen" *ngIf="true">Ostatnio widziany:</p>
+  </div>
+</div>

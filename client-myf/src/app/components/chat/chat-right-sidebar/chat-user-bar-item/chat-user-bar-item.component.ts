@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ChatService } from '../../../_services/ChatService/chat.service';
-import { KeycloakService } from '../../../_utils/keycloak/keycloak.service';
-import { IUser } from '../../../_models/user.model';
+import { ChatService } from '../../../../_services/ChatService/chat.service';
+import { KeycloakService } from '../../../../_utils/keycloak/keycloak.service';
+import { IUser } from '../../../../_models/user.model';
 
 @Component({
   selector: 'app-chat-user-bar-item',
