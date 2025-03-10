@@ -34,7 +34,10 @@ public class UserService {
 
         log.info("Users: {}", user.getFriends());
 
-        return null;
+        return user.getFriends()
+                .stream()
+                .map(UserMapper::toUserResponse)
+                .toList();
 
     }
 }

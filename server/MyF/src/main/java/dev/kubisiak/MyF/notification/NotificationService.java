@@ -1,5 +1,7 @@
 package dev.kubisiak.MyF.notification;
 
+import dev.kubisiak.MyF.chat.Chat;
+import dev.kubisiak.MyF.invitation.Invitation;
 import dev.kubisiak.MyF.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,51 +21,37 @@ public class NotificationService {
     }
 
 
-    public void sendNotificationThatChatWasCreated(User sender, User receiver){
+    public void sendNotificationThatPrivateChatWasCreated(User chatReceiver,User chatCreator, Chat chat){
 
-            Notification receiverNotification = Notification.builder()
-                        .content("You have been added to a new chat with " + receiver.getFirstName() + " " + receiver.getLastName())
+            Notification notification = Notification.builder()
+                        .content("You have been added to a new chat with " + chatCreator.getFirstName() + " " + chatCreator.getLastName())
                         .type(NotificationType.ADD_CHAT)
+                        .payload(chat)
                         .build();
-            simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
-
-
-            Notification senderNotification = Notification.builder()
-                        .content("You have been added to a new chat with " + sender.getFirstName() + " " + sender.getLastName())
-                        .type(NotificationType.ADD_CHAT)
-                        .build();
-            simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",senderNotification);
+            simpMessagingTemplate.convertAndSendToUser(chatReceiver.getId(),"/notification",notification);
     }
 
-    public void sendNotificationThatUserSentInvitation(User sender, User receiver){
+    public void sendNotificationThatUserSentInvitation(User invitationReceiver, Invitation invitation){
 
-        Notification receiverNotification = Notification.builder()
-                .content("You have been invited to a chat by " + sender.getFirstName() + " " + sender.getLastName())
-                .type(NotificationType.RECEIVED_INVITATION)
-                .build();
-        simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
-
-        Notification senderNotification = Notification.builder()
-                .content("You have invited " + sender.getFirstName() + " " + sender.getLastName() + " to a chat")
+        Notification notification = Notification.builder()
+                .content("User " + invitation.getSender().getFirstName() + " " + invitation.getSender().getLastName() + " sent you an invitation")
                 .type(NotificationType.SENT_INVITATION)
+                .payload(invitation)
                 .build();
 
-        simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",receiverNotification);
+        simpMessagingTemplate.convertAndSendToUser(invitationReceiver.getId(),"/notification",notification);
 
     }
 
-    public void sentNotificationThatUserAcceptedInvitation(User sender, User receiver){
-        Notification receiverNotification = Notification.builder()
-                .content("You have accepted an invitation to a chat with " + sender.getFirstName() + " " + sender.getLastName())
-                .type(NotificationType.ACCEPTED_INVITATION)
-                .build();
-        simpMessagingTemplate.convertAndSendToUser(receiver.getId(),"/notification",receiverNotification);
+    public void sentNotificationThatUserAcceptedInvitation(User invitationSender, Invitation invitation){
 
-        Notification senderNotification = Notification.builder()
-                .content(receiver.getFirstName() + " " + receiver.getLastName() + " has accepted your invitation to a chat")
+
+        Notification notification = Notification.builder()
+                .content("User " + invitation.getRecipient().getFirstName() + " " + invitation.getRecipient().getLastName() + " accepted your invitation")
                 .type(NotificationType.ACCEPTED_INVITATION)
+                .payload(invitation)
                 .build();
-        simpMessagingTemplate.convertAndSendToUser(sender.getId(),"/notification",senderNotification);
+        simpMessagingTemplate.convertAndSendToUser(invitationSender.getId(),"/notification",notification);
     }
 
 

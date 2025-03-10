@@ -43,7 +43,7 @@ public class ChatService {
 
         Chat chatFromRepository = chatRepository.save(chat);
 
-        notificationService.sendNotificationThatChatWasCreated(authUser,receiver);
+        notificationService.sendNotificationThatPrivateChatWasCreated(receiver,authUser,chatFromRepository);
 
         return chatMapper.mapToChatResponse(chatFromRepository, authUser);
     }

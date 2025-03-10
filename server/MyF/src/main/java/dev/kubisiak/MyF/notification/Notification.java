@@ -12,5 +12,6 @@ public class Notification {
 
     private String content;
     private NotificationType type;
+    private Object payload;
 
 }

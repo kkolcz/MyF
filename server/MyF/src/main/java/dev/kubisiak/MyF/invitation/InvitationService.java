@@ -49,7 +49,7 @@ public class InvitationService {
         invitationRepository.save(invitation);
 
         //Sent notification about invitation
-        notificationService.sendNotificationThatUserSentInvitation(sender, invitedUser);
+        notificationService.sendNotificationThatUserSentInvitation(invitedUser, invitation);
 
         return invitationMapper.mapToInvitationResponse(invitation);
 
@@ -123,7 +123,7 @@ public class InvitationService {
             invitationRepository.delete(invitation);
             invitation.setStatus(InvitationStatus.ACCEPTED);
 
-            notificationService.sentNotificationThatUserAcceptedInvitation(sender, recipient);
+            notificationService.sentNotificationThatUserAcceptedInvitation(sender, invitation);
 
             return invitationMapper.mapToInvitationResponse(invitation);
 
