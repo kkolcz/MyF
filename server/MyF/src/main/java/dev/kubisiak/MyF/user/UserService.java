@@ -52,21 +52,11 @@ public class UserService {
     public Map<String, Object> getAllStrangers(Authentication authentication, int page, int pageSize, String name) {
 
 
-        String[] nameParts = name.trim().split("\\s+");
-        String firstName = "";
-        String lastName = "";
-
-        if (nameParts.length == 1) {
-            firstName = nameParts[0];
-        } else if (nameParts.length > 1) {
-            firstName = nameParts[0];
-            lastName = String.join(" ", Arrays.copyOfRange(nameParts, 1, nameParts.length));
-        }
 
         Sort sort = Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")).ascending();
         Pageable pageable = PageRequest.of(page, pageSize, sort);
 
-        Page<User> users = userRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(authentication.getName(), firstName, lastName, pageable);
+        Page<User> users = userRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(authentication.getName(), name , pageable);
         return buildResponseMap(users);
     }
 

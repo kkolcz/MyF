@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User, String>, PagingAndSo
 
     @Query("SELECT u FROM User u WHERE u.id <> :userId " +
             "AND u.id NOT IN (SELECT f.id FROM User u JOIN u.friends f WHERE u.id = :userId) " +
-            "AND u.firstName LIKE %:firstName% AND u.lastName LIKE %:lastName%")
-    Page<User> findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(String userId, String firstName, String lastName, Pageable pageable);
+            "AND CONCAT(u.firstName, ' ', u.lastName) LIKE %:name%")
+    Page<User> findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(String userId, String name, Pageable pageable);
 }
