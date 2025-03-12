@@ -40,7 +40,6 @@ public class ChatService {
         Chat chat = new Chat();
         chat.setUsers(List.of(authUser, receiver));
 
-
         Chat chatFromRepository = chatRepository.save(chat);
 
         notificationService.sendNotificationThatPrivateChatWasCreated(receiver,authUser,chatFromRepository);

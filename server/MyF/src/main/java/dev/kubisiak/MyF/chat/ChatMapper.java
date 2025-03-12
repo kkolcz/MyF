@@ -28,7 +28,7 @@ public class ChatMapper {
 
 
     private String getLastMessage(Chat chat) {
-        if(chat.getMessages().isEmpty()) {
+        if(chat.getMessages().isEmpty() || chat.getMessages() == null) {
             return "";
         }
         return chat.getMessages().get(chat.getMessages().size()-1).getContent();
