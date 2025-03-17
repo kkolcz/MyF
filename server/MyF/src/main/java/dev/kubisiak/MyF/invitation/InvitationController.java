@@ -24,6 +24,8 @@ public class InvitationController {
     public ResponseEntity<InvitationResponse> sendInvitation(@RequestBody InvitationRequest invitationRequest, Authentication authentication){
 
 
+        System.out.println("Invitation request: " + invitationRequest.getInvitedUserId());
+
         try {
             return ResponseEntity.ok(invitationService.sendInvitation(invitationRequest, authentication));
         }  catch (Exception e) {

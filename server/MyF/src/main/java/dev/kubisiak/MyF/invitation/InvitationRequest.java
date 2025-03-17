@@ -10,6 +10,6 @@ import lombok.*;
 @Builder
 public class InvitationRequest {
 
-    private String InvitedUserId;
+    private String invitedUserId;
 
 }

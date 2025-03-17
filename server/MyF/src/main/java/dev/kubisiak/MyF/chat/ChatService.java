@@ -38,6 +38,8 @@ public class ChatService {
         }
 
         Chat chat = new Chat();
+        chat.setType(ChatType.PRIVATE);
+        chat.setMessages(List.of());
         chat.setUsers(List.of(authUser, receiver));
 
         Chat chatFromRepository = chatRepository.save(chat);

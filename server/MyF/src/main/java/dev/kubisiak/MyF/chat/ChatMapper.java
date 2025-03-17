@@ -3,12 +3,14 @@ package dev.kubisiak.MyF.chat;
 
 import dev.kubisiak.MyF.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatMapper {
     public ChatResponse mapToChatResponse(Chat chat, User authUser) {
 
@@ -28,17 +30,21 @@ public class ChatMapper {
 
 
     private String getLastMessage(Chat chat) {
-        if(chat.getMessages().isEmpty() || chat.getMessages() == null) {
-            return "";
+        if(!chat.getMessages().isEmpty() && chat.getMessages() != null) {
+            return chat.getMessages().getLast().getContent();
         }
-        return chat.getMessages().get(chat.getMessages().size()-1).getContent();
+
+        return null;
+
     }
 
     private LocalDateTime getLastMessageTime(Chat chat) {
-        if(chat.getMessages().isEmpty()) {
-            return null;
+        if(!chat.getMessages().isEmpty() && chat.getMessages() != null) {
+            chat.getMessages().get(0).getCreatedDate();
         }
-        return chat.getMessages().get(chat.getMessages().size()-1).getCreatedDate();
+
+
+        return null;
     }
 
     private String getChatName(Chat chat, User authUser) {
