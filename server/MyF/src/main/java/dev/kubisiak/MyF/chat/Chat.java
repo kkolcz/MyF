@@ -38,4 +38,5 @@ public class Chat extends BaseAuditingEntity {
     private ChatType type;
 
 
+
 }

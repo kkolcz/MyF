@@ -1,10 +1,11 @@
 import { Component, effect, OnDestroy, OnInit } from '@angular/core';
-import {
-  IMessage,
-  WebsocketService,
-} from '../../../_services/WebSocketService/websocket.service';
+import { WebsocketService } from '../../../_services/WebSocketService/websocket.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChatService } from '../../../_services/ChatService/chat.service';
+import { KeycloakService } from '../../../_utils/keycloak/keycloak.service';
+import { IRecrivedMessages } from '../../../_models/message.model';
+import { IToolbarUser } from '../../../_models/user.model';
 
 @Component({
   selector: 'app-chat-main',
@@ -15,35 +16,71 @@ import { CommonModule } from '@angular/common';
 })
 export class ChatMainComponent implements OnInit, OnDestroy {
   usernameInput: string = '';
-  username: string = '';
-  messages: IMessage[] = [];
+  username: string = 'anonymous';
+  messages: IRecrivedMessages[] = [];
   messageInput: string = '';
+  currentChatUser: IToolbarUser = {
+    fullNamed: '',
+    isOnline: false,
+    avatarUrl: '',
+    lastSeen: '',
+  };
 
-  constructor(private websocketService: WebsocketService) {
+  currentUserId: string = '';
+
+  constructor(
+    private websocketService: WebsocketService,
+    private chatService: ChatService,
+    private keycloak: KeycloakService
+  ) {
     effect(() => {
-      this.messages = this.websocketService.messages();
-      console.log('Nowe wiadomości:', this.messages);
+      this.messages = this.chatService.currentChatMessages();
+      this.currentChatUser = this.chatService.currentChatUser();
+      this.currentUserId = this.keycloak.userId;
+      console.log('Fetch all messages for current chat:', this.messages);
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.fetchAllChats();
+    this.fetchAllClients();
+    this.registerMessageHandler();
+  }
 
   ngOnDestroy() {}
+
+  fetchAllClients() {
+    this.chatService.getAllClients().subscribe((data) => {
+      console.log('Fetch all clients:', data);
+    });
+  }
+
+  fetchAllChats() {
+    this.chatService.getAllChats().subscribe((data) => {
+      console.log('Fetch all chats:', data);
+    });
+  }
+
+  registerMessageHandler() {
+    this.websocketService.registerMessageHandler((message: any) => {
+      console.log('Received new message from WS:', message);
+      this.messages.push(message);
+    });
+  }
 
   onUsernameSubmit() {
     if (this.usernameInput.trim()) {
       this.username = this.usernameInput;
-      this.websocketService.connect(this.username);
     }
   }
 
   sendMessage() {
-    const messageObj: IMessage = {
-      sender: this.username,
+    const messageObj: any = {
       content: this.messageInput,
-      messageType: 'CHAT',
+      type: 'TEXT',
+      chatId: this.chatService.currentChatId(),
     };
 
-    this.websocketService.sendMessage(messageObj);
+    this.chatService.sendMessage(messageObj);
   }
 }

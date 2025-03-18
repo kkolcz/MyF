@@ -1,67 +1,111 @@
-import { Injectable, OnDestroy, signal } from '@angular/core';
-import { CompatClient, Stomp } from '@stomp/stompjs';
+import { inject, Injectable, OnDestroy, OnInit, signal } from '@angular/core';
 import { StompSubscription } from '@stomp/stompjs';
+import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
+
+import { Client } from '@stomp/stompjs';
+import { FriendsService } from '../FriendsService/friends.service';
 
 export type ListenerCallBack = (message: any) => void;
 
-export interface IMessage {
-  sender: string;
+export interface ISendNewMessage {
+  chatId: string;
   content: string;
-  messageType: string;
+  type: string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService implements OnDestroy {
-  private connection: CompatClient | undefined = undefined;
-  private subscription: StompSubscription | undefined;
+export class WebsocketService implements OnInit, OnDestroy {
+  private socketClient!: Client;
+  private messageSubscription: StompSubscription | undefined;
+  private notificationSubscription: StompSubscription | undefined;
+  private messageHandler: ListenerCallBack | undefined;
+  private notificationHandler: ListenerCallBack | undefined;
 
-  messages = signal<IMessage[]>([]);
+  constructor(private keycloakService: KeycloakService) {}
 
-  constructor() {}
+  friendsService = inject(FriendsService);
 
-  connect(username: string) {
-    this.connection = Stomp.client('ws://localhost:8080/ws');
-    this.connection.connect({}, () => {
-      console.log('Connected to the server');
-      this.connection!.send(
-        '/app/chat.addUser',
-        {},
-        JSON.stringify({ sender: username, type: 'JOIN' })
-      );
-      this.subscribeTopic((message) => {
-        // console.log('Received message:', message);
+  messages = signal<ISendNewMessage[]>([]);
+
+  WS_ENDPOINT = 'ws://localhost:8080/ws';
+
+  ngOnInit(): void {}
+
+  registerMessageHandler(handler: ListenerCallBack) {
+    this.messageHandler = handler;
+  }
+
+  registerNotificationHandler(handler: ListenerCallBack) {
+    this.notificationHandler = handler;
+  }
+
+  initWebSocket() {
+    if (this.keycloakService.keycloak.tokenParsed?.sub) {
+      const ws_messages = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/messages`;
+      const ws_notifications = `/users/${this.keycloakService.keycloak.tokenParsed.sub}/notification`;
+
+      this.socketClient = new Client({
+        brokerURL: 'ws://localhost:8080/ws',
+        connectHeaders: {
+          Authorization: 'Bearer ' + this.keycloakService.keycloak.token,
+        },
+        debug: (msg: string) => {
+          console.log(msg);
+        },
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
       });
+
+      this.socketClient.onConnect = (frame) => {
+        this.messageSubscription = this.socketClient.subscribe(
+          ws_messages,
+          (message: any) => {
+            const parsedMessage: Notification = JSON.parse(message.body);
+            if (this.messageHandler) {
+              console.log('WS: Message:', parsedMessage);
+              this.messageHandler(parsedMessage);
+            }
+          }
+        );
+
+        this.notificationSubscription = this.socketClient.subscribe(
+          ws_notifications,
+          (message: any) => {
+            const parsedMessage: Notification = JSON.parse(message.body);
+            console.log('WS: Notification:', parsedMessage);
+            if (this.notificationHandler) {
+              this.notificationHandler(parsedMessage);
+            }
+          }
+        );
+      };
+
+      this.socketClient.onStompError = (frame) => {
+        console.error('STOMP error:', frame);
+      };
+
+      this.socketClient.activate();
+    }
+  }
+
+  sendMessage(message: ISendNewMessage) {
+    console.log('Sending message:', message);
+    this.socketClient.publish({
+      destination: '/app/chat/sendMessage',
+      body: JSON.stringify(message),
     });
   }
 
-  sendMessage(message: any) {
-    if (this.connection && this.connection.connected) {
-      this.connection.send(
-        '/app/chat.sendMessage',
-        {},
-        JSON.stringify(message)
-      );
-    }
-  }
-
-  subscribeTopic(callback: ListenerCallBack) {
-    if (this.connection && this.connection.connected) {
-      this.subscription = this.connection.subscribe(
-        '/topic/public',
-        (message) => {
-          const parsedMessage = JSON.parse(message.body);
-
-          this.messages.update((messages) => [...messages, parsedMessage]);
-        }
-      );
-    }
-  }
-
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+
+    if (this.notificationSubscription) {
+      this.notificationSubscription.unsubscribe();
     }
   }
 }

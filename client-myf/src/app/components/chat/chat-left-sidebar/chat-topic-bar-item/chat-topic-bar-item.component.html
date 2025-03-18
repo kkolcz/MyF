@@ -1,0 +1,22 @@
+<div
+  class="topic-bar-item"
+  (click)="onLeftClick()"
+  (contextmenu)="onRightClick($event)"
+>
+  <div
+    class="topic-status"
+    [ngClass]="{
+      online: conversation.recipientOnline,
+      offline: !conversation.recipientOnline
+    }"
+  ></div>
+  <div class="topic-info">
+    <p class="topic-name">{{ conversation.name }}</p>
+    <p class="topic-last-message">
+      {{ conversation.lastMessage | slice : 0 : 20 }}...
+    </p>
+    <!-- <p class="topic-last-seen" *ngIf="!conversation.recipientOnline">
+      Ostatnio widziany: {{ conversation.lastMessageTime | date : "short" }}
+    </p> -->
+  </div>
+</div>

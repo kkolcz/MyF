@@ -1,7 +1,10 @@
 export interface ITopic {
-  id: number;
-  type: 'group' | 'private';
+  id: string;
+  lastMessage: string | null;
+  lastMessageTime: string | null;
   name: string;
-  isOnline?: boolean;
-  lastSeen?: Date;
+  receiverId: string;
+  recipientOnline: boolean;
+  senderId: string;
+  unreadCount: number;
 }

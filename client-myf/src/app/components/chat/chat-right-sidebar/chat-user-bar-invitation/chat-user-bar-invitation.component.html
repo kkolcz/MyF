@@ -1,0 +1,20 @@
+<div>
+  <input
+    type="text"
+    class="invite-input"
+    placeholder="Search"
+    [(ngModel)]="inviteUserInput"
+  />
+  <button class="search-button" (click)="addUserFriend()">
+    Dodaj
+    <i class="bi bi-search"></i>
+  </button>
+  @for(friend of foundedUsers; track friend.id) {
+  <div>
+    <app-friend-user-bar-item
+      [user]="friend"
+      [isFounded]="true"
+    ></app-friend-user-bar-item>
+  </div>
+  }
+</div>

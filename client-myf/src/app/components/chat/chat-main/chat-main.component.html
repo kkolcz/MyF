@@ -22,19 +22,54 @@
   <!-- Sekcja chatu -->
   <div class="row" *ngIf="username">
     <div class="col-md-8 offset-md-2">
+      <!-- Pasek statusu użytkownika -->
+      <div class="user-status-bar">
+        <div class="user-name">{{ currentChatUser.fullNamed }}</div>
+        <div class="user-status">
+          {{
+            currentChatUser.isOnline
+              ? "Online"
+              : "Ostatnio widziany: " + currentChatUser.lastSeen
+          }}
+        </div>
+      </div>
+
       <!-- Box z wiadomościami -->
       <div class="chat-box border rounded p-3 mb-3" #scrollContainer>
+        <p>sdasdasdasdas</p>
         <div class="message-container" *ngFor="let message of messages">
-          <div [ngClass]="{ 'text-end': message.sender === username }">
-            <small class="text-muted">{{ message.sender }}</small>
+          <div [ngClass]="{ 'text-end': message.senderId === currentUserId }">
+            <small class="text-muted">{{ message.senderId }}</small>
             <div
               [ngClass]="{
-                'my-message': message.sender === username,
-                'other-message': message.sender !== username
+                'my-message': message.senderId === currentUserId,
+                'other-message': message.senderId !== currentUserId
               }"
               class="message-bubble p-2 mb-2 rounded"
             >
               {{ message.content }}
+              <!-- <div *ngIf="message.media">
+                <img
+                  *ngIf="message.type === 'IMAGE'"
+                  [src]="message.media"
+                  class="img-fluid"
+                />
+                <video
+                  *ngIf="message.type === 'VIDEO'"
+                  [src]="message.media"
+                  controls
+                  class="img-fluid"
+                ></video>
+                <audio
+                  *ngIf="message.type === 'AUDIO'"
+                  [src]="message.media"
+                  controls
+                ></audio>
+              </div> -->
+              <small class="text-muted">{{
+                message.createdAt | date : "short"
+              }}</small>
+              <!-- <small class="text-muted">{{ message.state }}</small> -->
             </div>
           </div>
         </div>

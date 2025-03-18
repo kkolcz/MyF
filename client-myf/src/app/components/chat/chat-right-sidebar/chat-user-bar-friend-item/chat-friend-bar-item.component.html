@@ -1,0 +1,30 @@
+<div
+  class="user-bar-item"
+  (click)="onLeftClick()"
+  (contextmenu)="onRightClick($event)"
+>
+  <div>
+    @if (isFounded) {
+    <button class="add-friend-button" (click)="addFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    } @if(isInvitation) {
+    <button class="add-friend-button" (click)="acceptFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    <button class="add-friend-button" (click)="rejectFriend($event)">
+      <i class="bi bi-person-plus-fill"></i>
+    </button>
+    }
+  </div>
+  <div
+    class="user-status"
+    [ngClass]="{ online: user.online, offline: !user.online }"
+  ></div>
+  <div class="user-info">
+    <p class="user-nickname">{{ user.firstName }} {{ user.lastName }}</p>
+    <p class="user-last-seen" *ngIf="true">
+      Ostatnio widziany: {{ user.lastSeen | date : "short" }}
+    </p>
+  </div>
+</div>

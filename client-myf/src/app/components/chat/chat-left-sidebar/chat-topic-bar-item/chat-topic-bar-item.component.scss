@@ -3,6 +3,7 @@
   align-items: center;
   padding: 10px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .topic-bar-item:hover {
@@ -14,6 +15,7 @@
   height: 10px;
   border-radius: 50%;
   margin-right: 10px;
+  background-color: gray;
 }
 
 .topic-status.online {
@@ -31,6 +33,11 @@
 
 .topic-name {
   font-weight: bold;
+}
+
+.topic-last-message {
+  font-size: 0.9em;
+  color: gray;
 }
 
 .topic-last-seen {

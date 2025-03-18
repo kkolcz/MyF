@@ -5,7 +5,7 @@ import { Injectable, signal } from '@angular/core';
 })
 export class SidebarService {
   private isCollapsedLeft = signal<boolean>(false);
-  private isCollapsedRight = signal<boolean>(false);
+  private isCollapsedRight = signal<boolean>(true);
 
   get isCollapsedLeft$() {
     return this.isCollapsedLeft;
