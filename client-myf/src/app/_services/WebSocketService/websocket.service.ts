@@ -5,6 +5,8 @@ import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 import { Client } from '@stomp/stompjs';
 import { FriendsService } from '../FriendsService/friends.service';
 import { IInvitation } from '../../_models/invitation.model';
+import { INotificationMessage } from '../../_models/ws_notification.model';
+import { ChatService } from '../ChatService/chat.service';
 
 export type ListenerCallBack = (message: any) => void;
 
@@ -17,7 +19,7 @@ export interface ISendNewMessage {
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService implements OnInit, OnDestroy {
+export class WebsocketService implements OnDestroy {
   private socketClient!: Client;
   private messageSubscription: StompSubscription | undefined;
   private notificationSubscription: StompSubscription | undefined;
@@ -27,12 +29,11 @@ export class WebsocketService implements OnInit, OnDestroy {
   constructor(private keycloakService: KeycloakService) {}
 
   friendsService = inject(FriendsService);
+  chatService = inject(ChatService);
 
   messages = signal<ISendNewMessage[]>([]);
 
   WS_ENDPOINT = 'ws://localhost:8080/ws';
-
-  ngOnInit(): void {}
 
   registerMessageHandler(handler: ListenerCallBack) {
     this.messageHandler = handler;
@@ -82,33 +83,19 @@ export class WebsocketService implements OnInit, OnDestroy {
               this.notificationHandler(parsedMessage);
             }
 
-            if (
-              parsedMessage.type === 'SENT_INVITATION' &&
-              parsedMessage.payload
-            ) {
-              const invitation = parsedMessage.payload as IInvitation;
-
-              this.friendsService.invitations.update((invitations) => [
-                ...invitations,
-                invitation,
-              ]);
-            }
-
-            if (
-              parsedMessage.type === 'ACCEPTED_INVITATION' &&
-              parsedMessage.payload
-            ) {
-              const invitation = parsedMessage.payload as IInvitation;
-
-              this.friendsService.invitations.update((invitations) =>
-                invitations.filter((inv) => inv.id !== invitation.id)
-              );
-
-              const newFriend = invitation.sender;
-              this.friendsService.friends.update((friends) => [
-                ...friends,
-                newFriend,
-              ]);
+            switch (parsedMessage.type) {
+              case 'SENT_INVITATION':
+                this.handleNotificationNewInvitation(parsedMessage);
+                break;
+              case 'ACCEPTED_INVITATION':
+                this.handleNotificationAcceptedInvitation(parsedMessage);
+                break;
+              case 'REJECTED_INVITATION':
+                console.log('Received rejected invitation:', parsedMessage);
+                break;
+              case 'ADD_CHAT':
+                this.handleNotificationAddChat(parsedMessage);
+                break;
             }
           }
         );
@@ -122,7 +109,42 @@ export class WebsocketService implements OnInit, OnDestroy {
     }
   }
 
-  sendMessage(message: ISendNewMessage) {
+  handleNotificationNewInvitation(message: INotificationMessage) {
+    if (message.type === 'SENT_INVITATION' && message.payload) {
+      const invitation = message.payload as IInvitation;
+
+      this.friendsService.invitations.update((invitations) => [
+        ...invitations,
+        invitation,
+      ]);
+    }
+  }
+
+  handleNotificationAcceptedInvitation(message: INotificationMessage) {
+    if (message.type === 'ACCEPTED_INVITATION' && message.payload) {
+      const invitation = message.payload as IInvitation;
+
+      this.friendsService.invitations.update((invitations) =>
+        invitations.filter((inv) => inv.id !== invitation.id)
+      );
+
+      const newFriend = invitation.sender;
+      this.friendsService.friends.update((friends) => [...friends, newFriend]);
+    }
+  }
+  handleNotificationRejectedInvitation(message: INotificationMessage) {
+    console.log('Received rejected invitation:', message);
+    // handle rejected invitation
+  }
+
+  handleNotificationAddChat(message: INotificationMessage) {
+    if (message.type === 'ADD_CHAT' && message.payload) {
+      const chat = message.payload;
+      this.chatService.conversations.update((chats) => [...chats, chat]);
+    }
+  }
+
+  handleSendMessage(message: ISendNewMessage) {
     console.log('Sending message:', message);
     this.socketClient.publish({
       destination: '/app/chat/sendMessage',

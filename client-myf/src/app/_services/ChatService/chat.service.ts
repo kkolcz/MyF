@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnInit, signal } from '@angular/core';
-import { IMessage } from '@stomp/stompjs';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, Injector, OnInit, signal } from '@angular/core';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 import { ITopic } from '../../_models/topic.model';
 import { IToolbarUser } from '../../_models/user.model';
@@ -50,11 +48,12 @@ export class ChatService implements OnInit {
     isOnline: false,
     avatarUrl: '',
   });
+  conversations = signal<ITopic[]>([]);
 
   constructor(
     private http: HttpClient,
     private keycloak: KeycloakService,
-    private websocketService: WebsocketService
+    private injector: Injector
   ) {}
 
   ngOnInit(): void {}
@@ -109,6 +108,6 @@ export class ChatService implements OnInit {
       type: 'TEXT',
     };
 
-    this.websocketService.sendMessage(messageObj);
+    this.injector.get(WebsocketService).handleSendMessage(messageObj);
   }
 }

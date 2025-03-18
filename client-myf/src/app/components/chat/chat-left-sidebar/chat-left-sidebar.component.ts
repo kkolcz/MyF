@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 import { ChatTopicBarItemComponent } from './chat-topic-bar-item/chat-topic-bar-item.component';
 import { ITopic } from '../../../_models/topic.model';
@@ -15,17 +15,16 @@ import { ChatService } from '../../../_services/ChatService/chat.service';
 export class ChatLeftSidebarComponent implements OnInit {
   isCollapsed$ = computed(() => this.sidebarService.isCollapsedLeft$());
 
-  conversations: ITopic[] = [];
+  chatService = inject(ChatService);
 
-  constructor(
-    private sidebarService: SidebarService,
-    private chatService: ChatService
-  ) {}
+  conversations = this.chatService.conversations;
+
+  constructor(private sidebarService: SidebarService) {}
 
   ngOnInit(): void {
     this.chatService.getAllChats().subscribe((data: ITopic[]) => {
       console.log('All fetched topics:', data);
-      this.conversations = data;
+      this.chatService.conversations.set(data);
     });
   }
 
