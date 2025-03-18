@@ -7,31 +7,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/chats")
 @RequiredArgsConstructor
-@Tag(name = "Chat")
+@RequestMapping("/api/v1")
+@Tag(name ="Chat")
 public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping
-    public ResponseEntity<StringResponse> createChat(
-            @RequestParam(name = "sender-id") String senderId,
-            @RequestParam(name = "receiver-id") String receiverId
-    ) {
-        final String chatId = chatService.createChat(senderId, receiverId);
-        StringResponse response = StringResponse.builder()
-                .response(chatId)
-                .build();
+    @PostMapping("/chat/create/private")
+    public ResponseEntity<ChatResponse> joinChat(@RequestParam(name = "receiver-id") String receiverId, Authentication authentication) {
+        ChatResponse chatResponse = chatService.createPrivateChat(receiverId, authentication);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(chatResponse);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ChatResponse>> getChatsByReceiver(Authentication authentication){
-        return ResponseEntity.ok(chatService.getChatsByReceiverId(authentication));
+    @GetMapping("/chats")
+    public ResponseEntity<List<ChatResponse>> getChatsByUser(Authentication authentication){
+        return ResponseEntity.ok(chatService.getChatsByUserId(authentication));
     }
+
 }

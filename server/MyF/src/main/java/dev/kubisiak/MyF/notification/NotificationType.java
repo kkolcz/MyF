@@ -2,9 +2,8 @@ package dev.kubisiak.MyF.notification;
 
 public enum NotificationType {
 
-    SEEN,
-    MESSAGE,
-    IMAGE,
-    AUDIO,
-    VIDEO,
+    RECEIVED_INVITATION,
+    SENT_INVITATION,
+    ACCEPTED_INVITATION, ADD_CHAT
+
 }

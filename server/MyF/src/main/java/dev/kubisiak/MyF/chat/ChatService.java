@@ -1,17 +1,13 @@
 package dev.kubisiak.MyF.chat;
 
 
+import dev.kubisiak.MyF.notification.NotificationService;
 import dev.kubisiak.MyF.user.User;
 import dev.kubisiak.MyF.user.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,36 +16,58 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
     private final ChatMapper chatMapper;
-
-    @Transactional(readOnly = true)
-    public List<ChatResponse> getChatsByReceiverId(Authentication currentUser) {
-            final String userId = currentUser.getName();
-            return chatRepository.findChatsBySenderId(userId)
-                    .stream()
-                    .map(c -> chatMapper.toChatResponse(c, userId))
-                    .toList();
+    private final NotificationService notificationService;
 
 
+    public ChatResponse createPrivateChat(String receiverId, Authentication authentication) {
 
-    }
 
-    public String createChat(String senderId, String receiverId) {
-        Optional<Chat> existingChat = chatRepository.findChatBySenderIdAndReceiverId(senderId, receiverId);
-        if (existingChat.isPresent()) {
-            return existingChat.get().getId();
+        User authUser = userRepository.findById(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User with id: " + authentication.getName() + " not found"));
+        User receiver = userRepository.findById(receiverId)
+                .orElseThrow(() -> new RuntimeException("User with id: " + receiverId + " not found"));
+
+        //Check if chat already exists
+        String chatId = checkIfChatExists(authUser, receiver);
+        if (chatId != null) {
+            return ChatResponse.builder()
+                    .id(chatId)
+                    .name(receiver.getFirstName() + " " + receiver.getLastName())
+                    .type(ChatType.PRIVATE)
+                    .build();
         }
 
-        User sender = userRepository.findByPublicId(senderId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + senderId + " not found"));
-        User receiver = userRepository.findByPublicId(receiverId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + receiverId + " not found"));
-
         Chat chat = new Chat();
-        chat.setSender(sender);
-        chat.setRecipient(receiver);
+        chat.setType(ChatType.PRIVATE);
+        chat.setMessages(List.of());
+        chat.setUsers(List.of(authUser, receiver));
 
-        Chat savedChat = chatRepository.save(chat);
-        return savedChat.getId();
+        Chat chatFromRepository = chatRepository.save(chat);
+
+        notificationService.sendNotificationThatPrivateChatWasCreated(receiver,authUser,chatFromRepository);
+
+        return chatMapper.mapToChatResponse(chatFromRepository, authUser);
+    }
+
+    private String checkIfChatExists(User authUser, User receiver) {
+        List<Chat> chats = chatRepository.findAllByUsers(authUser);
+        for (Chat chat : chats) {
+            if (chat.getUsers().contains(receiver)) {
+                return chat.getId();
+            }
+        }
+        return null;
+    }
+
+    public List<ChatResponse> getChatsByUserId(Authentication authentication) {
+
+
+        User user = userRepository.findById(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User with id: " + authentication.getName() + " not found"));
+        return chatRepository.findAllByUsers(user)
+                .stream()
+                .map(chat -> chatMapper.mapToChatResponse(chat, user))
+                .toList();
 
     }
 

@@ -1,5 +1,6 @@
 package dev.kubisiak.MyF.message;
 
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,14 +10,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessageResponse {
+public class ResponseMessage {
 
     private Long id;
     private String content;
-    private MessageType type;
-    private MessageState state;
     private String senderId;
-    private String receiverId;
-    private LocalDateTime createdAt;
-    private byte[] media;
+    private String chatId;
+    private MessageState state;
+    private MessageType type;
+    private LocalDateTime createdDate;
+
 }
