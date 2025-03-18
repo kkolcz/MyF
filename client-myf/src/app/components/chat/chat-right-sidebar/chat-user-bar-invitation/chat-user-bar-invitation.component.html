@@ -17,4 +17,16 @@
     ></app-friends-user-bar-item>
   </div>
   }
+
+  @if(invitations().length) {
+    <h5>Invitations</h5>
+    } @for(invitation of invitations(); track invitation.id) {
+    <div>
+      <chat-user-bar-invitation-item
+        [invitation]="invitation"
+      ></chat-user-bar-invitation-item>
+    </div>
+    }
+
+    
 </div>

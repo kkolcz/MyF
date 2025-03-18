@@ -4,6 +4,7 @@ import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 
 import { Client } from '@stomp/stompjs';
 import { FriendsService } from '../FriendsService/friends.service';
+import { IInvitation } from '../../_models/invitation.model';
 
 export type ListenerCallBack = (message: any) => void;
 
@@ -74,10 +75,40 @@ export class WebsocketService implements OnInit, OnDestroy {
         this.notificationSubscription = this.socketClient.subscribe(
           ws_notifications,
           (message: any) => {
-            const parsedMessage: Notification = JSON.parse(message.body);
+            const parsedMessage = JSON.parse(message.body);
             console.log('WS: Notification:', parsedMessage);
+
             if (this.notificationHandler) {
               this.notificationHandler(parsedMessage);
+            }
+
+            if (
+              parsedMessage.type === 'SENT_INVITATION' &&
+              parsedMessage.payload
+            ) {
+              const invitation = parsedMessage.payload as IInvitation;
+
+              this.friendsService.invitations.update((invitations) => [
+                ...invitations,
+                invitation,
+              ]);
+            }
+
+            if (
+              parsedMessage.type === 'ACCEPTED_INVITATION' &&
+              parsedMessage.payload
+            ) {
+              const invitation = parsedMessage.payload as IInvitation;
+
+              this.friendsService.invitations.update((invitations) =>
+                invitations.filter((inv) => inv.id !== invitation.id)
+              );
+
+              const newFriend = invitation.sender;
+              this.friendsService.friends.update((friends) => [
+                ...friends,
+                newFriend,
+              ]);
             }
           }
         );

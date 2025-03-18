@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { endpoints } from '../../_enums/endpoints.enum';
 import { IInvitation } from '../../_models/invitation.model';
 import { tap } from 'rxjs';
 import { IUser } from '../../_models/user.model';
+import { WebsocketService } from '../WebSocketService/websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,14 @@ export class FriendsService {
       body
     );
   }
+
+  // registerMessageHandler() {
+  //   this.websocketService.registerMessageHandler((message: any) => {
+  //     // console.log('Received new invitation from WS:', message);
+  //     // this.messages.push(message);
+  //     // this.invitations.set([...this.invitations(), message]);
+  //   });
+  // }
 
   updateInvitation(id: string, status: string) {
     if (status === 'ACCEPTED' || status === 'REJECTED') {
@@ -64,7 +73,7 @@ export class FriendsService {
   }
 
   getFriends() {
-        return this.http
+    return this.http
       .get<IUser[]>(`${environment.API_URL}/${endpoints.getFriends}`)
       .subscribe({
         next: (data) => {

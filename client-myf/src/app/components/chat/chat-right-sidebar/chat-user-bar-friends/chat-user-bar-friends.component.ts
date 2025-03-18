@@ -6,23 +6,17 @@ import { FriendsService } from '../../../../_services/FriendsService/friends.ser
 @Component({
   selector: 'app-chat-user-bar-friends',
   standalone: true,
-  imports: [ChatUserBarInvitationItemComponent, ChatFriendsBarItemComponent],
+  imports: [ ChatFriendsBarItemComponent],
   templateUrl: './chat-user-bar-friends.component.html',
   styleUrl: './chat-user-bar-friends.component.scss',
 })
 export class ChatUserBarFriendsComponent implements OnInit {
   friendsService = inject(FriendsService);
-  invitations = this.friendsService.invitations;
+
   friends = this.friendsService.friends;
 
   ngOnInit(): void {
-    this.getInvitations();
     this.getFriends();
-  }
-
-  getInvitations(): void {
-    this.friendsService.getReceivedInvitations();
-    this.friendsService.getSendedInvitations();
   }
 
   getFriends(): void {
