@@ -1,23 +1,15 @@
 package dev.kubisiak.MyF.message;
 
-import dev.kubisiak.MyF.file.FileUtils;
-import org.springframework.stereotype.Service;
-
-@Service
 public class MessageMapper {
 
+    public static ResponseMessage mapToResponseMessage(Message message) {
 
-
-    public MessageResponse toMessageResponse(Message message) {
-        return MessageResponse.builder()
+        return ResponseMessage.builder()
                 .id(message.getId())
                 .content(message.getContent())
                 .senderId(message.getSenderId())
-                .receiverId(message.getReceiverId())
+                .chatId(message.getChat().getId())
                 .type(message.getType())
-                .state(message.getState())
-                .createdAt(message.getCreatedDate())
-                .media(FileUtils.readFileFromLocation(message.getMediaFilePath()))
                 .build();
     }
 }

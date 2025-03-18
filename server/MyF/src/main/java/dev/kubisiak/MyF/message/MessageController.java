@@ -1,49 +1,39 @@
 package dev.kubisiak.MyF.message;
 
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 @Tag(name ="Message")
 public class MessageController {
 
     private final MessageService messageService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveMessage(@RequestBody MessageRequest messageRequest) {
+
+    @MessageMapping("/chat/sendMessage")
+    public void sendMessage(MessageRequest messageRequest) {
         messageService.saveMessage(messageRequest);
     }
 
-    @PostMapping(value = "/upload-media", consumes = "multipart/form-data")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void uploadMedia(
-            @RequestParam("chatId") String chatId,
-            @Parameter()
-            @RequestPart("file") MultipartFile file,
-            Authentication authentication) {
-        messageService.uploadMediaMessage(chatId, file, authentication);
-    }
-
-    @PatchMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void setMessageToSeen(@RequestParam("chat-id") String chatId, Authentication authentication) {
-        messageService.setMessagesToSeen(chatId, authentication);
-    }
-
-    @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<MessageResponse>> getMessages(@PathVariable String chatId) {
+    @GetMapping("/chat/{chatId}/messages")
+    public ResponseEntity<List<ResponseMessage>> getChatMessages(@PathVariable("chatId") String chatId){
         return ResponseEntity.ok(messageService.findChatMessages(chatId));
     }
 

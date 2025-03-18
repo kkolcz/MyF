@@ -3,7 +3,6 @@ package dev.kubisiak.MyF.user;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -29,20 +28,17 @@ public class UserMapper {
             user.setEmail(attributes.get("email").toString());
         }
 
-        user.setLastSeen(LocalDateTime.now());
-
         return user;
 
     }
 
-    public UserResponse toUserResponse(User user) {
+    public static UserResponse toUserResponse(User user) {
+
         return UserResponse.builder()
                 .id(user.getId())
                 .firstName(user.getFirstName())
-                .lastname(user.getLastName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
-                .lastSeen(user.getLastSeen())
-                .isOnline(user.isUserOnline())
                 .build();
     }
 }
