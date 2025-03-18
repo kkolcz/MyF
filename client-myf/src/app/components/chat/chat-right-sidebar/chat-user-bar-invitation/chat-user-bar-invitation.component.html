@@ -11,10 +11,10 @@
   </button>
   @for(friend of foundedUsers; track friend.id) {
   <div>
-    <app-friend-user-bar-item
+    <app-friends-user-bar-item
       [user]="friend"
       [isFounded]="true"
-    ></app-friend-user-bar-item>
+    ></app-friends-user-bar-item>
   </div>
   }
 </div>

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatFriendBarItemComponent } from './chat-friend-bar-item.component';
+import { ChatFriendsBarItemComponent } from './chat-friends-bar-item.component';
 
 describe('ChatUserBarItemComponent', () => {
-  let component: ChatFriendBarItemComponent;
-  let fixture: ComponentFixture<ChatFriendBarItemComponent>;
+  let component: ChatFriendsBarItemComponent;
+  let fixture: ComponentFixture<ChatFriendsBarItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChatFriendBarItemComponent],
+      imports: [ChatFriendsBarItemComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ChatFriendBarItemComponent);
+    fixture = TestBed.createComponent(ChatFriendsBarItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

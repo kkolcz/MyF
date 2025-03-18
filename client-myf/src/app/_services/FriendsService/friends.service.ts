@@ -64,7 +64,7 @@ export class FriendsService {
   }
 
   getFriends() {
-    return this.http
+        return this.http
       .get<IUser[]>(`${environment.API_URL}/${endpoints.getFriends}`)
       .subscribe({
         next: (data) => {

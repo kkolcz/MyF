@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FriendsService } from '../../../../_services/FriendsService/friends.service';
-import { ChatFriendBarItemComponent } from '../chat-user-bar-friend-item/chat-friend-bar-item.component';
+import { ChatFriendsBarItemComponent } from '../chat-user-bar-friend-item/chat-friends-bar-item.component';
 
 @Component({
   selector: 'app-chat-user-bar-invitation',
   standalone: true,
-  imports: [FormsModule, ChatFriendBarItemComponent],
+  imports: [FormsModule, ChatFriendsBarItemComponent],
   templateUrl: './chat-user-bar-invitation.component.html',
   styleUrl: './chat-user-bar-invitation.component.scss',
 })

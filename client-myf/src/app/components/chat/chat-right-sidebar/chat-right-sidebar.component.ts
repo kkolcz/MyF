@@ -7,9 +7,10 @@ import { IUser } from '../../../_models/user.model';
 import { FormsModule } from '@angular/forms';
 import { FriendsService } from '../../../_services/FriendsService/friends.service';
 import { ChatUserBarInvitationComponent } from './chat-user-bar-invitation/chat-user-bar-invitation.component';
-import { ChatFriendBarItemComponent } from './chat-user-bar-friend-item/chat-friend-bar-item.component';
-import { ChatUserBarInvitationItemComponent } from './chat-user-bar-invitation-item/chat-user-bar-invitation-item.component';
+import { ChatFriendsBarItemComponent } from './chat-user-bar-friend-item/chat-friends-bar-item.component';
+import { ChatUserBarInvitationItemComponent } from './chat-user-bar-invitation/chat-user-bar-invitation-item/chat-user-bar-invitation-item.component';
 import { JsonPipe } from '@angular/common';
+import { ChatUserBarFriendsComponent } from './chat-user-bar-friends/chat-user-bar-friends.component';
 
 interface IRecrivedInvitation {
   id: string;
@@ -30,11 +31,9 @@ interface IRecrivedInvitation {
   selector: 'app-chat-right-sidebar',
   standalone: true,
   imports: [
-    ChatFriendBarItemComponent,
     FormsModule,
     ChatUserBarInvitationComponent,
-    ChatUserBarInvitationItemComponent,
-    JsonPipe,
+    ChatUserBarFriendsComponent,
   ],
   templateUrl: './chat-right-sidebar.component.html',
   styleUrl: './chat-right-sidebar.component.scss',
@@ -51,19 +50,11 @@ export class ChatRightSidebarComponent implements OnInit {
     private chatService: ChatService
   ) {}
 
-  friendsService = inject(FriendsService);
-  invitations = this.friendsService.invitations;
-  friends = this.friendsService.friends;
-
   ngOnInit(): void {
     // this.chatService.getAllClients().subscribe((data) => {
     //   console.log('All clients:', data);
     //   this.users = data as IUser[];
     // });
-
-    this.getInvitations();
-    this.getFriends();
-
     // this.friendsService.getReceivedInvitations().subscribe(
     //   (data) => {
     //     console.log('Received invitations:', data);
@@ -74,7 +65,6 @@ export class ChatRightSidebarComponent implements OnInit {
     //     console.error('Error:', error);
     //   }
     // );
-
     // this.friendsService.getSendedInvitations().subscribe(
     //   (data) => {
     //     console.log('Sended invitations:', data);
@@ -83,15 +73,6 @@ export class ChatRightSidebarComponent implements OnInit {
     //     console.error('Error:', error);
     //   }
     // );
-  }
-
-  getInvitations(): void {
-    this.friendsService.getReceivedInvitations();
-    this.friendsService.getSendedInvitations();
-  }
-
-  getFriends(): void {
-    this.friendsService.getFriends();
   }
 
   toggleSidebar(): void {

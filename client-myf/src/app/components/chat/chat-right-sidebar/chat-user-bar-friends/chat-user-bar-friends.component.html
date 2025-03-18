@@ -1,0 +1,22 @@
+@if(!invitations().length && !friends().length) {
+<div class="no-friends">
+  <p>No friends yet</p>
+</div>
+} @if(invitations().length) {
+<h5>Invitations</h5>
+} @for(invitation of invitations(); track invitation.id) {
+<div>
+  <chat-user-bar-invitation-item
+    [invitation]="invitation"
+  ></chat-user-bar-invitation-item>
+</div>
+}
+<h5>Friends</h5>
+@for(user of friends(); track user.id) {
+<div>
+  <app-friends-user-bar-item
+    [user]="user"
+    [isFriend]="true"
+  ></app-friends-user-bar-item>
+</div>
+}

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ChatService } from '../../../../_services/ChatService/chat.service';
-import { KeycloakService } from '../../../../_utils/keycloak/keycloak.service';
-import { IUser } from '../../../../_models/user.model';
-import { FriendsService } from '../../../../_services/FriendsService/friends.service';
-import { IInvitation } from '../../../../_models/invitation.model';
+import { ChatService } from '../../../../../_services/ChatService/chat.service';
+import { KeycloakService } from '../../../../../_utils/keycloak/keycloak.service';
+import { IUser } from '../../../../../_models/user.model';
+import { FriendsService } from '../../../../../_services/FriendsService/friends.service';
+import { IInvitation } from '../../../../../_models/invitation.model';
 
 @Component({
   selector: 'chat-user-bar-invitation-item',

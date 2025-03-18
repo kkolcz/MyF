@@ -6,13 +6,13 @@ import { IUser } from '../../../../_models/user.model';
 import { FriendsService } from '../../../../_services/FriendsService/friends.service';
 
 @Component({
-  selector: 'app-friend-user-bar-item',
+  selector: 'app-friends-user-bar-item',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './chat-friend-bar-item.component.html',
-  styleUrl: './chat-friend-bar-item.component.scss',
+  templateUrl: './chat-friends-bar-item.component.html',
+  styleUrl: './chat-friends-bar-item.component.scss',
 })
-export class ChatFriendBarItemComponent {
+export class ChatFriendsBarItemComponent {
   @Input() user!: IUser;
   @Input() isInvitation: boolean = false;
   @Input() isFounded: boolean = false;
