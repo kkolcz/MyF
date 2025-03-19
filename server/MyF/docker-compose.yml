@@ -23,6 +23,7 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     networks:
         - myf-network
+    restart: unless-stopped
     command:
       - "start-dev"
 
