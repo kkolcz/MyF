@@ -1,6 +1,7 @@
 package dev.kubisiak.MyF.invitation;
 
 
+import dev.kubisiak.MyF.chat.ChatResponse;
 import dev.kubisiak.MyF.user.UserResponse;
 import lombok.*;
 

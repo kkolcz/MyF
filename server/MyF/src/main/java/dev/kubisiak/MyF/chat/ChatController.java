@@ -18,12 +18,12 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @PostMapping("/chat/create/private")
-    public ResponseEntity<ChatResponse> joinChat(@RequestParam(name = "receiver-id") String receiverId, Authentication authentication) {
-        ChatResponse chatResponse = chatService.createPrivateChat(receiverId, authentication);
-
-        return ResponseEntity.ok(chatResponse);
-    }
+//    @PostMapping("/chat/create/private")
+//    public ResponseEntity<ChatResponse> joinChat(@RequestParam(name = "receiver-id") String receiverId, Authentication authentication) {
+//        ChatResponse chatResponse = chatService.createPrivateChat(receiverId, authentication);
+//
+//        return ResponseEntity.ok(chatResponse);
+//    }
 
     @GetMapping("/chats")
     public ResponseEntity<List<ChatResponse>> getChatsByUser(Authentication authentication){

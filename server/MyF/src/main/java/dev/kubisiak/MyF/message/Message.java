@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "messages")
 public class Message extends BaseAuditingEntity {
 
     @Id
