@@ -19,45 +19,7 @@ public class ChatService {
     private final NotificationService notificationService;
 
 
-    public ChatResponse createPrivateChat(String receiverId, Authentication authentication) {
 
-
-        User authUser = userRepository.findById(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User with id: " + authentication.getName() + " not found"));
-        User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new RuntimeException("User with id: " + receiverId + " not found"));
-
-        //Check if chat already exists
-        String chatId = checkIfChatExists(authUser, receiver);
-        if (chatId != null) {
-            return ChatResponse.builder()
-                    .id(chatId)
-                    .name(receiver.getFirstName() + " " + receiver.getLastName())
-                    .type(ChatType.PRIVATE)
-                    .build();
-        }
-
-        Chat chat = new Chat();
-        chat.setType(ChatType.PRIVATE);
-        chat.setMessages(List.of());
-        chat.setUsers(List.of(authUser, receiver));
-
-        Chat chatFromRepository = chatRepository.save(chat);
-
-        notificationService.sendNotificationThatPrivateChatWasCreated(receiver,authUser,chatFromRepository);
-
-        return chatMapper.mapToChatResponse(chatFromRepository, authUser);
-    }
-
-    private String checkIfChatExists(User authUser, User receiver) {
-        List<Chat> chats = chatRepository.findAllByUsers(authUser);
-        for (Chat chat : chats) {
-            if (chat.getUsers().contains(receiver)) {
-                return chat.getId();
-            }
-        }
-        return null;
-    }
 
     public List<ChatResponse> getChatsByUserId(Authentication authentication) {
 

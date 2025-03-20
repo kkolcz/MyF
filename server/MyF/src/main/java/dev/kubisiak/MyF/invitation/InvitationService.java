@@ -1,5 +1,8 @@
 package dev.kubisiak.MyF.invitation;
 
+import dev.kubisiak.MyF.chat.Chat;
+import dev.kubisiak.MyF.chat.ChatRepository;
+import dev.kubisiak.MyF.chat.ChatType;
 import dev.kubisiak.MyF.notification.NotificationService;
 import dev.kubisiak.MyF.user.User;
 import dev.kubisiak.MyF.user.UserRepository;
@@ -20,6 +23,8 @@ public class InvitationService {
     private final UserRepository userRepository;
     private final InvitationMapper invitationMapper;
     private final NotificationService notificationService;
+    private final ChatRepository chatRepository;
+    private final ChatAndInvitationMapper chatAndInvitationMapper;
 
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest, Authentication authentication) throws Exception {
 
@@ -90,7 +95,7 @@ public class InvitationService {
 
 
 
-    public InvitationResponse acceptOrRejectInvitation(InvitationStatus invitationStatus, Authentication authentication, String invitationId) {
+    public ChatAndInvitationResponse acceptOrRejectInvitation(InvitationStatus invitationStatus, Authentication authentication, String invitationId) {
 
 
         Invitation invitation = invitationRepository.findById(invitationId)
@@ -105,7 +110,7 @@ public class InvitationService {
         if(invitationStatus.equals(InvitationStatus.REJECTED)){
             invitationRepository.delete(invitation);
             invitation.setStatus(InvitationStatus.REJECTED);
-            return invitationMapper.mapToInvitationResponse(invitation);
+            return chatAndInvitationMapper.mapToChatAndInvitationResponse(invitation,null, invitation.getRecipient());
         }
 
         if(invitationStatus.equals(InvitationStatus.ACCEPTED)){
@@ -123,13 +128,52 @@ public class InvitationService {
             invitationRepository.delete(invitation);
             invitation.setStatus(InvitationStatus.ACCEPTED);
 
+            Chat chat = createPrivateChat(recipient,sender);
+
             notificationService.sentNotificationThatUserAcceptedInvitation(sender, invitation);
 
-            return invitationMapper.mapToInvitationResponse(invitation);
+            return chatAndInvitationMapper.mapToChatAndInvitationResponse(invitation,chat, recipient);
 
 
         }
 
         throw new IllegalArgumentException("Invitation status is not valid");
     }
+
+
+
+
+
+    private Chat createPrivateChat(User userWhoAcceptInvitation, User userWhoSentInvitation) {
+
+
+
+        //Check if chat already exists
+        Chat chatFromRepository = checkIfChatExists(userWhoAcceptInvitation, userWhoSentInvitation);
+        if (chatFromRepository != null) {
+            return chatFromRepository;
+        }
+
+        Chat chat = new Chat();
+        chat.setType(ChatType.PRIVATE);
+        chat.setMessages(List.of());
+        chat.setUsers(List.of(userWhoAcceptInvitation, userWhoSentInvitation));
+
+        Chat newCreatedChatFromRepository = chatRepository.save(chat);
+
+        notificationService.sendNotificationThatPrivateChatWasCreated(userWhoSentInvitation,userWhoAcceptInvitation,newCreatedChatFromRepository);
+
+        return newCreatedChatFromRepository;
+    }
+
+    private Chat checkIfChatExists(User authUser, User receiver) {
+        List<Chat> chats = chatRepository.findAllByUsers(authUser);
+        for (Chat chat : chats) {
+            if (chat.getUsers().contains(receiver)) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
 }

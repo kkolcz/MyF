@@ -47,7 +47,7 @@ public class InvitationController {
     }
 
     @PatchMapping("/invitation/{invitationId}")
-    public ResponseEntity<InvitationResponse> acceptOrRejectInvitation(@RequestParam("newInvitationStatus") InvitationStatus invitationStatus, Authentication authentication, @PathVariable String invitationId){
+    public ResponseEntity<ChatAndInvitationResponse> acceptOrRejectInvitation(@RequestParam("newInvitationStatus") InvitationStatus invitationStatus, Authentication authentication, @PathVariable String invitationId){
         return ResponseEntity.ok(invitationService.acceptOrRejectInvitation(invitationStatus, authentication, invitationId));
 
     }
