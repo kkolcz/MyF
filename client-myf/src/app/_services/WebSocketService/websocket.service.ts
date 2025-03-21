@@ -14,6 +14,7 @@ export interface ISendNewMessage {
   chatId: string;
   content: string;
   type: string;
+  senderId: string | undefined;
 }
 
 @Injectable({

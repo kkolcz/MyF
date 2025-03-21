@@ -106,6 +106,7 @@ export class ChatService implements OnInit {
       content: message.content,
       chatId: this.currentChatId(),
       type: 'TEXT',
+      senderId: this.keycloak.keycloak.tokenParsed?.sub,
     };
 
     this.injector.get(WebsocketService).handleSendMessage(messageObj);
