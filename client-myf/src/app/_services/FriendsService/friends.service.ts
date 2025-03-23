@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { endpoints } from '../../_enums/endpoints.enum';
-import { IInvitation } from '../../_models/invitation.model';
+import { IFriendInvDto } from '../../_models/DTOs/friend-inv.model';
 import { tap } from 'rxjs';
 import { IUser } from '../../_models/user.model';
 import { WebsocketService } from '../WebSocketService/websocket.service';
@@ -11,7 +11,7 @@ import { WebsocketService } from '../WebSocketService/websocket.service';
   providedIn: 'root',
 })
 export class FriendsService {
-  invitations = signal<IInvitation[]>([]);
+  invitations = signal<IFriendInvDto[]>([]);
   friends = signal<IUser[]>([]);
 
   constructor(private http: HttpClient) {}
@@ -24,14 +24,6 @@ export class FriendsService {
       body
     );
   }
-
-  // registerMessageHandler() {
-  //   this.websocketService.registerMessageHandler((message: any) => {
-  //     // console.log('Received new invitation from WS:', message);
-  //     // this.messages.push(message);
-  //     // this.invitations.set([...this.invitations(), message]);
-  //   });
-  // }
 
   updateInvitation(id: string, status: string) {
     if (status === 'ACCEPTED' || status === 'REJECTED') {
@@ -49,7 +41,7 @@ export class FriendsService {
 
   getSendedInvitations() {
     return this.http
-      .get<IInvitation[]>(
+      .get<IFriendInvDto[]>(
         `${environment.API_URL}/${endpoints.sendedInvitations}`
       )
       .subscribe({ next: (data) => {} });
@@ -57,18 +49,17 @@ export class FriendsService {
 
   getReceivedInvitations() {
     return this.http
-      .get<IInvitation[]>(
+      .get<IFriendInvDto[]>(
         `${environment.API_URL}/${endpoints.receivedInvitations}`
       )
       .subscribe({
         next: (data) => {
           this.invitations.set(data);
-          // console.log('Received invitations:', data);
         },
       });
   }
 
-  wsRecrivedNewInvitation(data: IInvitation) {
+  wsRecrivedNewInvitation(data: IFriendInvDto) {
     this.invitations.update((invitations) => [...invitations, data]);
   }
 

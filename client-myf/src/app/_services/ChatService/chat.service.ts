@@ -3,37 +3,9 @@ import { Injectable, Injector, OnInit, signal } from '@angular/core';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 import { ITopic } from '../../_models/topic.model';
 import { IToolbarUser } from '../../_models/user.model';
-import {
-  ISendNewMessage,
-  WebsocketService,
-} from '../WebSocketService/websocket.service';
-import { INewMessageRequest } from '../../_models/message.model';
+import { WebsocketService } from '../WebSocketService/websocket.service';
 import { environment } from '../../../environments/environment.development';
-
-export interface IMessageSend {
-  content: string;
-  senderId: string;
-  receiverId: string;
-  messageType: string;
-  chatId: string;
-}
-
-export interface IResponseCreateChat {
-  id: string;
-  name: string;
-  lastMessage: string;
-  lastMessageTime: string;
-  type: string;
-}
-
-export interface IChat {
-  id: string;
-  name: string;
-  lastMesage: string;
-  lastMessageTime: string;
-  type: string;
-  users: string[];
-}
+import { IMessageRequestDto } from '../../_models/DTOs/message.model';
 
 @Injectable({
   providedIn: 'root',
@@ -66,13 +38,12 @@ export class ChatService implements OnInit {
     return this.http.get<ITopic[]>('http://localhost:8080/api/v1/chats');
   }
 
-  newChat(senderId: string, receiverId: string) {
-    return this.http.post<IResponseCreateChat>(
-      // `http://localhost:8080/api/v1/chats?sender-id=${senderId}&receiver-id=${receiverId}`,
-      `http://localhost:8080/api/v1/chat/create/private?receiver-id=${receiverId}`,
-      {}
-    );
-  }
+  // newChat(senderId: string, receiverId: string) {
+  //   return this.http.post<IConversationCreateResponseDto>(
+  //     `http://localhost:8080/api/v1/chat/create/private?receiver-id=${receiverId}`,
+  //     {}
+  //   );
+  // }
 
   setCurrentChat(chat: any) {
     console.log('Current chat:', chat);
@@ -101,8 +72,8 @@ export class ChatService implements OnInit {
     );
   }
 
-  sendMessage(message: IMessageSend) {
-    const messageObj: ISendNewMessage = {
+  sendMessage(message: IMessageRequestDto) {
+    const messageObj: IMessageRequestDto = {
       content: message.content,
       chatId: this.currentChatId(),
       type: 'TEXT',

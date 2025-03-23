@@ -1,4 +1,4 @@
-export interface INotificationMessage {
-  type: string;
-  payload: any;
-}
+// export interface INotificationMessage {
+//   type: string;
+//   payload: any;
+// }

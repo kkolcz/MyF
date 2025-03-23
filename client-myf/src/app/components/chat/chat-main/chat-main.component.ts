@@ -6,6 +6,8 @@ import { ChatService } from '../../../_services/ChatService/chat.service';
 import { KeycloakService } from '../../../_utils/keycloak/keycloak.service';
 import { IRecrivedMessages } from '../../../_models/message.model';
 import { IToolbarUser } from '../../../_models/user.model';
+import { IMessage } from '@stomp/stompjs';
+import { IMessageRequestDto } from '../../../_models/DTOs/message.model';
 
 @Component({
   selector: 'app-chat-main',
@@ -49,36 +51,37 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  fetchAllClients() {
+  fetchAllClients(): void {
     this.chatService.getAllClients().subscribe((data) => {
       console.log('Fetch all clients:', data);
     });
   }
 
-  fetchAllChats() {
+  fetchAllChats(): void {
     this.chatService.getAllChats().subscribe((data) => {
       console.log('Fetch all chats:', data);
     });
   }
 
-  registerMessageHandler() {
+  registerMessageHandler(): void {
     this.websocketService.registerMessageHandler((message: any) => {
       console.log('Received new message from WS:', message);
       this.messages.push(message);
     });
   }
 
-  onUsernameSubmit() {
+  onUsernameSubmit(): void {
     if (this.usernameInput.trim()) {
       this.username = this.usernameInput;
     }
   }
 
-  sendMessage() {
-    const messageObj: any = {
+  sendMessage(): void {
+    const messageObj: IMessageRequestDto = {
+      chatId: this.chatService.currentChatId(),
       content: this.messageInput,
       type: 'TEXT',
-      chatId: this.chatService.currentChatId(),
+      senderId: undefined,
     };
 
     this.chatService.sendMessage(messageObj);

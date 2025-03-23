@@ -27,10 +27,10 @@ export class ChatUserBarItemComponent {
     event.preventDefault();
     console.log('Right click on user:', this.user.firstName);
 
-    this.chatService
-      .newChat(this.keycloak.userId, this.user.id)
-      .subscribe((data) => {
-        console.log('New chat:', data);
-      });
+    // this.chatService
+    //   .newChat(this.keycloak.userId, this.user.id)
+    //   .subscribe((data) => {
+    //     console.log('New chat:', data);
+    //   });
   }
 }

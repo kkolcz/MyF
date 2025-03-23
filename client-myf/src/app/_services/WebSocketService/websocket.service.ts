@@ -4,18 +4,12 @@ import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 
 import { Client } from '@stomp/stompjs';
 import { FriendsService } from '../FriendsService/friends.service';
-import { IInvitation } from '../../_models/invitation.model';
-import { INotificationMessage } from '../../_models/ws_notification.model';
+import { INotificationMessageDto } from '../../_models/DTOs/notification.model';
 import { ChatService } from '../ChatService/chat.service';
+import { IMessageRequestDto } from '../../_models/DTOs/message.model';
+import { IFriendInvDto } from '../../_models/DTOs/friend-inv.model';
 
 export type ListenerCallBack = (message: any) => void;
-
-export interface ISendNewMessage {
-  chatId: string;
-  content: string;
-  type: string;
-  senderId: string | undefined;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +26,7 @@ export class WebsocketService implements OnDestroy {
   friendsService = inject(FriendsService);
   chatService = inject(ChatService);
 
-  messages = signal<ISendNewMessage[]>([]);
+  messages = signal<IMessageRequestDto[]>([]);
 
   WS_ENDPOINT = 'ws://localhost:8080/ws';
 
@@ -110,9 +104,9 @@ export class WebsocketService implements OnDestroy {
     }
   }
 
-  handleNotificationNewInvitation(message: INotificationMessage) {
+  handleNotificationNewInvitation(message: INotificationMessageDto) {
     if (message.type === 'SENT_INVITATION' && message.payload) {
-      const invitation = message.payload as IInvitation;
+      const invitation = message.payload as IFriendInvDto;
 
       this.friendsService.invitations.update((invitations) => [
         ...invitations,
@@ -121,9 +115,9 @@ export class WebsocketService implements OnDestroy {
     }
   }
 
-  handleNotificationAcceptedInvitation(message: INotificationMessage) {
+  handleNotificationAcceptedInvitation(message: INotificationMessageDto) {
     if (message.type === 'ACCEPTED_INVITATION' && message.payload) {
-      const invitation = message.payload as IInvitation;
+      const invitation = message.payload as IFriendInvDto;
 
       this.friendsService.invitations.update((invitations) =>
         invitations.filter((inv) => inv.id !== invitation.id)
@@ -133,19 +127,18 @@ export class WebsocketService implements OnDestroy {
       this.friendsService.friends.update((friends) => [...friends, newFriend]);
     }
   }
-  handleNotificationRejectedInvitation(message: INotificationMessage) {
+  handleNotificationRejectedInvitation(message: INotificationMessageDto) {
     console.log('Received rejected invitation:', message);
-    // handle rejected invitation
   }
 
-  handleNotificationAddChat(message: INotificationMessage) {
+  handleNotificationAddChat(message: INotificationMessageDto) {
     if (message.type === 'ADD_CHAT' && message.payload) {
       const chat = message.payload;
       this.chatService.conversations.update((chats) => [...chats, chat]);
     }
   }
 
-  handleSendMessage(message: ISendNewMessage) {
+  handleSendMessage(message: IMessageRequestDto) {
     console.log('Sending message:', message);
     this.socketClient.publish({
       destination: '/app/chat/sendMessage',
