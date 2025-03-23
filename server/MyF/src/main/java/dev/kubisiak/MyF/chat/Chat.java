@@ -21,7 +21,6 @@ public class Chat extends BaseAuditingEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-
     @ManyToMany
     @JoinTable(
             name = "chat_user",
@@ -29,7 +28,6 @@ public class Chat extends BaseAuditingEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> users;
-
 
     @OneToMany(mappedBy = "chat", fetch = FetchType.EAGER)
     @OrderBy("createdDate DESC")

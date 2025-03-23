@@ -6,6 +6,7 @@ import dev.kubisiak.MyF.chat.ChatType;
 import dev.kubisiak.MyF.notification.NotificationService;
 import dev.kubisiak.MyF.user.User;
 import dev.kubisiak.MyF.user.UserRepository;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,6 @@ public class InvitationService {
     private final InvitationMapper invitationMapper;
     private final NotificationService notificationService;
     private final ChatRepository chatRepository;
-    private final ChatAndInvitationMapper chatAndInvitationMapper;
 
     public InvitationResponse sendInvitation(InvitationRequest invitationRequest, Authentication authentication) throws Exception {
 
@@ -63,16 +63,14 @@ public class InvitationService {
 
     private void checkIfUsersAreAlreadyFriends(User sender, User invitedUser) throws Exception {
         if (sender.getFriends().contains(invitedUser) || invitedUser.getFriends().contains(sender)) {
-            throw new IllegalArgumentException("Users are already friends");
+            throw new EntityExistsException("Users are already friends");
         }
     }
 
 
     public List<InvitationResponse> getSentInvitations(Authentication authentication) {
 
-       List<Invitation> sentInvitations = invitationRepository.findInvitationsBySender(authentication.getName()).orElseThrow(() -> new EntityNotFoundException("Currently list of sent invitation is empty"));
-
-       log.info("Sent invitations: {}", sentInvitations);
+       List<Invitation> sentInvitations = invitationRepository.findInvitationsBySender(authentication.getName());
 
         return sentInvitations.
                 stream()
@@ -84,8 +82,7 @@ public class InvitationService {
 
     public List<InvitationResponse> getReceivedInvitations(Authentication authentication) {
 
-        List<Invitation> receivedInvitations = invitationRepository.findInvitationsByRecipient(authentication.getName()).orElseThrow(() -> new EntityNotFoundException("Currently list of received invitation is empty"));
-
+        List<Invitation> receivedInvitations = invitationRepository.findInvitationsByRecipient(authentication.getName());
 
         return receivedInvitations.
                 stream()
@@ -95,7 +92,7 @@ public class InvitationService {
 
 
 
-    public ChatAndInvitationResponse acceptOrRejectInvitation(InvitationStatus invitationStatus, Authentication authentication, String invitationId) {
+    public Boolean acceptOrRejectInvitation(InvitationStatus invitationStatus, Authentication authentication, String invitationId) {
 
 
         Invitation invitation = invitationRepository.findById(invitationId)
@@ -110,7 +107,7 @@ public class InvitationService {
         if(invitationStatus.equals(InvitationStatus.REJECTED)){
             invitationRepository.delete(invitation);
             invitation.setStatus(InvitationStatus.REJECTED);
-            return chatAndInvitationMapper.mapToChatAndInvitationResponse(invitation,null, invitation.getRecipient());
+            return true;
         }
 
         if(invitationStatus.equals(InvitationStatus.ACCEPTED)){
@@ -132,7 +129,7 @@ public class InvitationService {
 
             notificationService.sentNotificationThatUserAcceptedInvitation(sender, invitation);
 
-            return chatAndInvitationMapper.mapToChatAndInvitationResponse(invitation,chat, recipient);
+            return true;
 
 
         }
