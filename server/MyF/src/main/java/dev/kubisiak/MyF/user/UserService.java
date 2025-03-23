@@ -23,24 +23,11 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    public List<UserResponse> getAllUsersExceptSelf(Authentication loggedUser){
-
-        return userRepository.findAllUsersExceptMyself(loggedUser.getName())
-                .stream()
-                .map(UserMapper::toUserResponse)
-                .toList();
-
-    }
-
 
     public List<UserResponse> getFriends(Authentication authentication) {
-
-
         User user = userRepository.findById(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
         log.info("Users: {}", user.getFriends());
-
         return user.getFriends()
                 .stream()
                 .map(UserMapper::toUserResponse)
@@ -50,12 +37,8 @@ public class UserService {
 
 
     public Map<String, Object> getAllStrangers(Authentication authentication, int page, int pageSize, String name) {
-
-
-
         Sort sort = Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")).ascending();
         Pageable pageable = PageRequest.of(page, pageSize, sort);
-
         Page<User> users = userRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(authentication.getName(), name , pageable);
         return buildResponseMap(users);
     }

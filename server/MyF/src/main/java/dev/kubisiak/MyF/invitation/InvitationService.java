@@ -71,7 +71,6 @@ public class InvitationService {
     public List<InvitationResponse> getSentInvitations(Authentication authentication) {
 
        List<Invitation> sentInvitations = invitationRepository.findInvitationsBySender(authentication.getName());
-
         return sentInvitations.
                 stream()
                 .map(invitationMapper::mapToInvitationResponse)
@@ -83,7 +82,6 @@ public class InvitationService {
     public List<InvitationResponse> getReceivedInvitations(Authentication authentication) {
 
         List<Invitation> receivedInvitations = invitationRepository.findInvitationsByRecipient(authentication.getName());
-
         return receivedInvitations.
                 stream()
                 .map(invitationMapper::mapToInvitationResponse)
@@ -125,7 +123,7 @@ public class InvitationService {
             invitationRepository.delete(invitation);
             invitation.setStatus(InvitationStatus.ACCEPTED);
 
-            Chat chat = createPrivateChat(recipient,sender);
+            createPrivateChat(recipient,sender);
 
             notificationService.sentNotificationThatUserAcceptedInvitation(sender, invitation);
 
@@ -141,14 +139,14 @@ public class InvitationService {
 
 
 
-    private Chat createPrivateChat(User userWhoAcceptInvitation, User userWhoSentInvitation) {
+    private void createPrivateChat(User userWhoAcceptInvitation, User userWhoSentInvitation) {
 
 
 
         //Check if chat already exists
         Chat chatFromRepository = checkIfChatExists(userWhoAcceptInvitation, userWhoSentInvitation);
         if (chatFromRepository != null) {
-            return chatFromRepository;
+            return;
         }
 
         Chat chat = new Chat();
@@ -159,8 +157,6 @@ public class InvitationService {
         Chat newCreatedChatFromRepository = chatRepository.save(chat);
 
         notificationService.sendNotificationThatPrivateChatWasCreated(userWhoSentInvitation,userWhoAcceptInvitation,newCreatedChatFromRepository);
-
-        return newCreatedChatFromRepository;
     }
 
     private Chat checkIfChatExists(User authUser, User receiver) {
