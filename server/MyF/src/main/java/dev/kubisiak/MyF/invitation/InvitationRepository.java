@@ -16,13 +16,13 @@ public interface InvitationRepository extends JpaRepository<Invitation, String> 
 
 
     @Query("SELECT i FROM Invitation i WHERE i.sender.id = :senderId")
-    Optional<List<Invitation>> findInvitationsBySender(String senderId);
+    List<Invitation> findInvitationsBySender(String senderId);
 
 
     Optional<Invitation> findInvitationBySenderAndRecipient(User sender, User invitedUser);
 
     @Query("SELECT i FROM Invitation i WHERE i.recipient.id = :recipientId")
-    Optional <List<Invitation>> findInvitationsByRecipient(String recipientId);
+    List<Invitation> findInvitationsByRecipient(String recipientId);
 
 
 }

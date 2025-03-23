@@ -23,13 +23,14 @@ public class ChatService {
 
     public List<ChatResponse> getChatsByUserId(Authentication authentication) {
 
-
         User user = userRepository.findById(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("User with id: " + authentication.getName() + " not found"));
         return chatRepository.findAllByUsers(user)
                 .stream()
                 .map(chat -> chatMapper.mapToChatResponse(chat, user))
                 .toList();
+
+
 
     }
 
