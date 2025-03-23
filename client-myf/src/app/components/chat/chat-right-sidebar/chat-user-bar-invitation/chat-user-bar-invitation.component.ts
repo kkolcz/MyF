@@ -36,9 +36,11 @@ export class ChatUserBarInvitationComponent implements OnInit {
   }
 
   searchUserHandler(): void {
-    this.friendsService.searchFriends('test').subscribe((data) => {
-      console.log('Founded users:', data);
-      this.foundedUsers = data as any[];
-    });
+    this.friendsService
+      .searchFriends(this.inviteUserInput)
+      .subscribe((data) => {
+        console.log('Founded users:', data);
+        // this.foundedUsers = data as any[];
+      });
   }
 }

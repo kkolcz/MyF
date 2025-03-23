@@ -4,7 +4,7 @@ import { ChatService } from '../../../../../_services/ChatService/chat.service';
 import { KeycloakService } from '../../../../../_utils/keycloak/keycloak.service';
 import { IUser } from '../../../../../_models/user.model';
 import { FriendsService } from '../../../../../_services/FriendsService/friends.service';
-import { IFriendInvDto } from '../../../../../_models/DTOs/friend-inv.model';
+import { IFriendInv } from '../../../../../_models/DTOs/friend-inv.model';
 
 @Component({
   selector: 'chat-user-bar-invitation-item',
@@ -14,7 +14,7 @@ import { IFriendInvDto } from '../../../../../_models/DTOs/friend-inv.model';
   styleUrl: './chat-user-bar-invitation-item.component.scss',
 })
 export class ChatUserBarInvitationItemComponent {
-  @Input() invitation!: IFriendInvDto;
+  @Input() invitation!: IFriendInv;
   // @Input() isInvitation: boolean = false;
   // @Input() isFounded: boolean = false;
   // @Input() isFriend: boolean = false;

@@ -105,27 +105,24 @@ export class WebsocketService implements OnDestroy {
   }
 
   handleNotificationNewInvitation(message: INotificationMessageDto) {
-    if (message.type === 'SENT_INVITATION' && message.payload) {
-      const invitation = message.payload as IFriendInvDto;
-
-      this.friendsService.invitations.update((invitations) => [
-        ...invitations,
-        invitation,
-      ]);
-    }
+    // if (message.type === 'SENT_INVITATION' && message.payload) {
+    //   const invitation = message.payload as IFriendInvDto;
+    //   this.friendsService.invitations.update((invitations) => [
+    //     ...invitations,
+    //     invitation,
+    //   ]);
+    // }
   }
 
   handleNotificationAcceptedInvitation(message: INotificationMessageDto) {
-    if (message.type === 'ACCEPTED_INVITATION' && message.payload) {
-      const invitation = message.payload as IFriendInvDto;
-
-      this.friendsService.invitations.update((invitations) =>
-        invitations.filter((inv) => inv.id !== invitation.id)
-      );
-
-      const newFriend = invitation.sender;
-      this.friendsService.friends.update((friends) => [...friends, newFriend]);
-    }
+    // if (message.type === 'ACCEPTED_INVITATION' && message.payload) {
+    //   const invitation = message.payload as IFriendInvDto;
+    //   this.friendsService.invitations.update((invitations) =>
+    //     invitations.filter((inv) => inv.id !== invitation.id)
+    //   );
+    //   const newFriend = invitation.sender;
+    //   this.friendsService.friends.update((friends) => [...friends, newFriend]);
+    // }
   }
 
   handleNotificationRejectedInvitation(message: INotificationMessageDto) {

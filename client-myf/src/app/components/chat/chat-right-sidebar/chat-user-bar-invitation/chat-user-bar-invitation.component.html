@@ -4,6 +4,7 @@
     class="invite-input"
     placeholder="Search"
     [(ngModel)]="inviteUserInput"
+    (keyup)="searchUserHandler()"
   />
   <button class="search-button" (click)="addUserFriend()">
     Dodaj
@@ -16,17 +17,13 @@
       [isFounded]="true"
     ></app-friends-user-bar-item>
   </div>
+  } @if(invitations().length) {
+  <h5>Invitations</h5>
+  } @for(invitation of invitations(); track invitation.id) {
+  <div>
+    <chat-user-bar-invitation-item
+      [invitation]="invitation"
+    ></chat-user-bar-invitation-item>
+  </div>
   }
-
-  @if(invitations().length) {
-    <h5>Invitations</h5>
-    } @for(invitation of invitations(); track invitation.id) {
-    <div>
-      <chat-user-bar-invitation-item
-        [invitation]="invitation"
-      ></chat-user-bar-invitation-item>
-    </div>
-    }
-
-    
 </div>

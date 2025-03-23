@@ -38,9 +38,9 @@ export class ChatService implements OnInit {
 
   apiService = inject(ApiService);
 
-  getAllClients() {
-    return this.http.get(`${environment.API_URL}/users`);
-  }
+  // getAllClients() {
+  //   return this.http.get(`${environment.API_URL}/users`);
+  // }
 
   getAllChats(): Observable<IBaseReponse<IConversationsResponseDto>> {
     return this.apiService.httpGet<IConversationsResponseDto>('/chats');

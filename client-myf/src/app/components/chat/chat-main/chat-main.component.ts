@@ -45,17 +45,17 @@ export class ChatMainComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.fetchAllChats();
-    this.fetchAllClients();
+    // this.fetchAllClients();
     this.registerMessageHandler();
   }
 
   ngOnDestroy() {}
 
-  fetchAllClients(): void {
-    this.chatService.getAllClients().subscribe((data) => {
-      console.log('Fetch all clients:', data);
-    });
-  }
+  // fetchAllClients(): void {
+  //   this.chatService.getAllClients().subscribe((data) => {
+  //     console.log('Fetch all clients:', data);
+  //   });
+  // }
 
   fetchAllChats(): void {
     this.chatService.getAllChats().subscribe((data) => {

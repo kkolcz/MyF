@@ -6,7 +6,7 @@ import { FriendsService } from '../../../../_services/FriendsService/friends.ser
 @Component({
   selector: 'app-chat-user-bar-friends',
   standalone: true,
-  imports: [ ChatFriendsBarItemComponent],
+  imports: [ChatFriendsBarItemComponent],
   templateUrl: './chat-user-bar-friends.component.html',
   styleUrl: './chat-user-bar-friends.component.scss',
 })
