@@ -1,3 +1,4 @@
+import { IPaginationRes } from '../paginationParams.model';
 import { IUser } from '../user.model';
 
 export interface IFriendDto {
@@ -17,4 +18,5 @@ export interface IFriendInv {
 
 export interface IFriendSearchDto {
   users: IUser[];
+  pagination: IPaginationRes;
 }

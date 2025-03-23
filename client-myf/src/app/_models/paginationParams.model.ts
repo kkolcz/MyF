@@ -3,3 +3,8 @@ export interface IPaginationParams {
   pageSize: string;
   filter: string;
 }
+
+export interface IPaginationRes {
+  page: number;
+  pageSize: number;
+}
