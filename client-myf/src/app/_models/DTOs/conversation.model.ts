@@ -1,5 +1,9 @@
 export interface IConversationRequestDto {}
 
+export interface IConversationsResponse {
+  chats: IConversationResponseDto[];
+}
+
 export interface IConversationResponseDto {
   id: string;
   lastMessage: string | null;
@@ -10,6 +14,8 @@ export interface IConversationResponseDto {
   senderId: string;
   unreadCount: number;
 }
+
+interface IConversation {}
 
 export interface IConversationCreateRequestDto {}
 

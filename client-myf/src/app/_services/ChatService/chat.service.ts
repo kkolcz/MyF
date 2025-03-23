@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Injector, OnInit, signal } from '@angular/core';
+import { inject, Injectable, Injector, OnInit, signal } from '@angular/core';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
 import { IConversationResponseDto } from '../../_models/DTOs/conversation.model';
 import { IToolbarUser } from '../../_models/user.model';
 import { WebsocketService } from '../WebSocketService/websocket.service';
 import { environment } from '../../../environments/environment.development';
 import { IMessageRequestDto } from '../../_models/DTOs/message.model';
+import { ApiService } from '../ApiService/api.service';
+import { Observable } from 'rxjs';
+import { IBaseReponse } from '../../_models/DTOs/base-reponse.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,13 +33,15 @@ export class ChatService implements OnInit {
 
   ngOnInit(): void {}
 
+  apiService = inject(ApiService);
+
   getAllClients() {
     return this.http.get(`${environment.API_URL}/users`);
   }
 
-  getAllChats() {
-    return this.http.get<IConversationResponseDto[]>(
-      `${environment.API_URL}/chats`
+  getAllChats(): Observable<any> {
+    return this.apiService.httpGet<IBaseReponse<IConversationResponseDto[]>>(
+      '/chats'
     );
   }
 

@@ -2,8 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 import { ChatTopicBarItemComponent } from './chat-topic-bar-item/chat-topic-bar-item.component';
-import { ITopic } from '../../../_models/topic.model';
+import {
+  IConversationResponseDto,
+  IConversationsResponse,
+} from '../../../_models/DTOs/conversation.model';
 import { ChatService } from '../../../_services/ChatService/chat.service';
+import { ApiService } from '../../../_services/ApiService/api.service';
+import { IBaseReponse } from '../../../_models/DTOs/base-reponse.model';
 
 @Component({
   selector: 'app-chat-left-sidebar',
@@ -22,10 +27,16 @@ export class ChatLeftSidebarComponent implements OnInit {
   constructor(private sidebarService: SidebarService) {}
 
   ngOnInit(): void {
-    this.chatService.getAllChats().subscribe((data: ITopic[]) => {
-      console.log('All fetched topics:', data);
-      this.chatService.conversations.set(data);
-    });
+    this.getConversations();
+  }
+
+  getConversations() {
+    this.chatService
+      .getAllChats()
+      .subscribe((res: IBaseReponse<IConversationsResponse>) => {
+        console.log('Conversations:', res.data.chats);
+        this.chatService.conversations.set(res.data.chats);
+      });
   }
 
   toggleSidebar() {

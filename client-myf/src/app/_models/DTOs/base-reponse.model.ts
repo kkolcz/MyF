@@ -2,7 +2,7 @@ export interface IBaseReponse<T> {
   statusCode: number;
   status: string;
   message: string;
-  data?: T;
+  data: T;
   errors: IError[];
   timeStamp: string;
 }

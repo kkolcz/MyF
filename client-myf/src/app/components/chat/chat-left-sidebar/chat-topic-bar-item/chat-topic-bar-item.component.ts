@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ITopic } from '../../../../_models/topic.model';
+import { IConversationResponseDto } from '../../../../_models/DTOs/conversation.model';
 import { ChatService } from '../../../../_services/ChatService/chat.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ChatService } from '../../../../_services/ChatService/chat.service';
   styleUrl: './chat-topic-bar-item.component.scss',
 })
 export class ChatTopicBarItemComponent {
-  @Input() conversation!: ITopic;
+  @Input() conversation!: IConversationResponseDto;
 
   constructor(private chatService: ChatService) {}
 
