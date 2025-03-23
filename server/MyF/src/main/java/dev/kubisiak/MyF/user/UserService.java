@@ -51,7 +51,7 @@ public class UserService {
         Map<String, Object> paging = new LinkedHashMap<>();
         paging.put("totalAmountOfPages", page.getTotalPages());
         paging.put("totalAmountOfItems", page.getTotalElements());
-        response.put("paging", paging);
+        response.put("pagination", paging);
         response.put("users", page.getContent().stream().map(UserMapper::toUserResponse).toList());
         return response;
     }
