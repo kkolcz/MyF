@@ -21,9 +21,9 @@ export class ApiService {
   ): Observable<IBaseReponse<T>> {
     const options = {
       params: new HttpParams()
-        .set('page', pagination.page)
+        .set('pageNumber', pagination.page)
         .set('pageSize', pagination.pageSize)
-        .set('name', pagination.filter),
+        .set('filter', pagination.filter),
     };
 
     return this.http.get<IBaseReponse<T>>(
