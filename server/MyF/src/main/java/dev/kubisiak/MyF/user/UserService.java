@@ -37,7 +37,7 @@ public class UserService {
 
 
     public Map<String, Object> getAllStrangers(Authentication authentication, int page, int pageSize, String name) {
-        if(page<0){
+        if(page>0){
             page = page - 1;
         }
         Sort sort = Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")).ascending();
