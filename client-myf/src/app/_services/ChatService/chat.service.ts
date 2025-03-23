@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, Injector, OnInit, signal } from '@angular/core';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
-import { IConversationResponseDto } from '../../_models/DTOs/conversation.model';
+import {
+  IConversation,
+  IConversationsResponseDto,
+} from '../../_models/DTOs/conversation.model';
 import { IToolbarUser } from '../../_models/user.model';
 import { WebsocketService } from '../WebSocketService/websocket.service';
 import { environment } from '../../../environments/environment.development';
@@ -23,7 +26,7 @@ export class ChatService implements OnInit {
     isOnline: false,
     avatarUrl: '',
   });
-  conversations = signal<IConversationResponseDto[]>([]);
+  conversations = signal<IConversation[]>([]);
 
   constructor(
     private http: HttpClient,
@@ -39,10 +42,8 @@ export class ChatService implements OnInit {
     return this.http.get(`${environment.API_URL}/users`);
   }
 
-  getAllChats(): Observable<any> {
-    return this.apiService.httpGet<IBaseReponse<IConversationResponseDto[]>>(
-      '/chats'
-    );
+  getAllChats(): Observable<IBaseReponse<IConversationsResponseDto>> {
+    return this.apiService.httpGet<IConversationsResponseDto>('/chats');
   }
 
   setCurrentChat(chat: any) {
@@ -54,7 +55,7 @@ export class ChatService implements OnInit {
     console.log('Current receiver:', this.currentReceiverId());
   }
 
-  setCurrentReceiver(receiverId: IConversationResponseDto) {
+  setCurrentReceiver(receiverId: IConversation) {
     this.currentChatUser.set({
       fullNamed: receiverId.name,
       isOnline: receiverId.recipientOnline,

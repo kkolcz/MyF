@@ -1,10 +1,10 @@
 export interface IConversationRequestDto {}
 
-export interface IConversationsResponse {
-  chats: IConversationResponseDto[];
+export interface IConversationsResponseDto {
+  chats: IConversation[];
 }
 
-export interface IConversationResponseDto {
+export interface IConversation {
   id: string;
   lastMessage: string | null;
   lastMessageTime: string | null;
@@ -15,7 +15,7 @@ export interface IConversationResponseDto {
   unreadCount: number;
 }
 
-interface IConversation {}
+// interface IConversation {}
 
 export interface IConversationCreateRequestDto {}
 

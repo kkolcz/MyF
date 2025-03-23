@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { IConversationResponseDto } from '../../../../_models/DTOs/conversation.model';
 import { ChatService } from '../../../../_services/ChatService/chat.service';
+import { IConversation } from '../../../../_models/DTOs/conversation.model';
 
 @Component({
   selector: 'app-chat-topic-bar-item',
@@ -11,14 +11,13 @@ import { ChatService } from '../../../../_services/ChatService/chat.service';
   styleUrl: './chat-topic-bar-item.component.scss',
 })
 export class ChatTopicBarItemComponent {
-  @Input() conversation!: IConversationResponseDto;
+  @Input() conversation!: IConversation;
 
   constructor(private chatService: ChatService) {}
 
   onLeftClick() {
     console.log('Left click on conversation:', this.conversation.id);
     this.chatService.setCurrentChat(this.conversation);
-    // this.chatService.setCurrentReceiver(this.conversation.receiverId);
     this.chatService.setCurrentReceiver(this.conversation);
   }
 

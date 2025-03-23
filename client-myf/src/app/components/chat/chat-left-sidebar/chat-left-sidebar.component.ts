@@ -2,10 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { SidebarService } from '../../../_services/SidebarService/sidebar.service';
 import { ChatTopicBarItemComponent } from './chat-topic-bar-item/chat-topic-bar-item.component';
-import {
-  IConversationResponseDto,
-  IConversationsResponse,
-} from '../../../_models/DTOs/conversation.model';
 import { ChatService } from '../../../_services/ChatService/chat.service';
 import { ApiService } from '../../../_services/ApiService/api.service';
 import { IBaseReponse } from '../../../_models/DTOs/base-reponse.model';
@@ -31,12 +27,10 @@ export class ChatLeftSidebarComponent implements OnInit {
   }
 
   getConversations() {
-    this.chatService
-      .getAllChats()
-      .subscribe((res: IBaseReponse<IConversationsResponse>) => {
-        console.log('Conversations:', res.data.chats);
-        this.chatService.conversations.set(res.data.chats);
-      });
+    this.chatService.getAllChats().subscribe((res) => {
+      console.log('Conversations:', res.data.chats);
+      this.chatService.conversations.set(res.data.chats);
+    });
   }
 
   toggleSidebar() {
