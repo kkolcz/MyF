@@ -50,7 +50,7 @@ public class InvitationController {
             }
 
 
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message(entityNotFoundException.getMessage())
@@ -60,7 +60,7 @@ public class InvitationController {
                             .build()
             );
         }catch (IllegalArgumentException illegalArgumentException){
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message(illegalArgumentException.getMessage())
@@ -70,7 +70,7 @@ public class InvitationController {
                             .build()
             );
         }catch (EntityExistsException entityExistsException){
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message(entityExistsException.getMessage())
@@ -81,7 +81,7 @@ public class InvitationController {
             );
         }catch (Exception exception){
             log.error("Failed to send invitation", exception);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to fetch chats")
@@ -110,7 +110,7 @@ public class InvitationController {
             );
         }catch (Exception exception){
             log.error("Failed to fetch sent invitations", exception);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to fetch invitations")
@@ -139,7 +139,7 @@ public class InvitationController {
             );
         }catch (Exception exception){
             log.error("Failed to fetch received invitations", exception);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to fetch invitations")
@@ -183,7 +183,7 @@ public class InvitationController {
                     errors = Map.of(ErrorMessageInformation.INTERNAL_SERVER_ERROR, "Failed to update invitation status");
                     break;
             }
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to fetch invitations")
@@ -193,7 +193,7 @@ public class InvitationController {
                             .build()
             );
         }catch (EntityNotFoundException entityNotFoundException){
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message(entityNotFoundException.getMessage())
@@ -204,7 +204,7 @@ public class InvitationController {
             );
         }catch (Exception exception){
             log.error("Failed to change invitation status", exception);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to change invitation status")

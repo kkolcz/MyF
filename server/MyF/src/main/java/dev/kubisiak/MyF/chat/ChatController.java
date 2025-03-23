@@ -41,7 +41,7 @@ public class ChatController {
             );
         } catch (Exception e) {
             log.error("Failed to fetch chats", e);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
                             .message("Failed to fetch chats")
