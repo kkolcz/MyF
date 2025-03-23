@@ -1,7 +1,10 @@
 export interface IBaseReponse<T> {
-  success: boolean;
+  statusCode: number;
+  status: string;
+  message: string;
   data?: T;
   errors: IError[];
+  timeStamp: string;
 }
 
 interface IError {
