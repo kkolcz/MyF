@@ -37,6 +37,9 @@ public class UserService {
 
 
     public Map<String, Object> getAllStrangers(Authentication authentication, int page, int pageSize, String name) {
+        if(page<0){
+            page = page - 1;
+        }
         Sort sort = Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")).ascending();
         Pageable pageable = PageRequest.of(page, pageSize, sort);
         Page<User> users = userRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseExcludingFriends(authentication.getName(), name , pageable);
@@ -45,8 +48,10 @@ public class UserService {
 
     private Map<String, Object> buildResponseMap(Page<User> page) {
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("totalAmountOfPages", page.getTotalPages());
-        response.put("totalAmountOfItems", page.getTotalElements());
+        Map<String, Object> paging = new LinkedHashMap<>();
+        paging.put("totalAmountOfPages", page.getTotalPages());
+        paging.put("totalAmountOfItems", page.getTotalElements());
+        response.put("paging", paging);
         response.put("users", page.getContent().stream().map(UserMapper::toUserResponse).toList());
         return response;
     }

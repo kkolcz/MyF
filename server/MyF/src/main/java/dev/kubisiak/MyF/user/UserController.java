@@ -27,9 +27,9 @@ public class UserController {
     @GetMapping("/user/strangers")
     public ResponseEntity<Response> getAllStrangers(
             Authentication authentication,
-            @RequestParam("page") int page,
+            @RequestParam("pageNumber") int page,
             @RequestParam("pageSize") int pageSize,
-            @RequestParam(value = "name",defaultValue = "",required = false) String name
+            @RequestParam(value = "filter",defaultValue = "",required = false) String name
 
     ){
 
@@ -37,7 +37,7 @@ public class UserController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("Users", userService.getAllStrangers(authentication,page,pageSize,name)))
+                            .data(userService.getAllStrangers(authentication,page,pageSize,name))
                             .message("Users fetched successfully")
                             .status(HttpStatus.OK)
                             .statusCode(HttpStatus.OK.value())
@@ -65,7 +65,7 @@ public class UserController {
             return ResponseEntity.ok(
                     Response.builder()
                             .timeStamp(LocalDateTime.now())
-                            .data(Map.of("Users", userService.getFriends(authentication)))
+                            .data(Map.of("users", userService.getFriends(authentication)))
                             .message("Users fetched successfully")
                             .status(HttpStatus.OK)
                             .statusCode(HttpStatus.OK.value())
