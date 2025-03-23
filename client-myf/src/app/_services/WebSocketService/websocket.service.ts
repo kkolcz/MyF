@@ -127,6 +127,7 @@ export class WebsocketService implements OnDestroy {
       this.friendsService.friends.update((friends) => [...friends, newFriend]);
     }
   }
+
   handleNotificationRejectedInvitation(message: INotificationMessageDto) {
     console.log('Received rejected invitation:', message);
   }

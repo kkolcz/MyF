@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector, OnInit, signal } from '@angular/core';
 import { KeycloakService } from '../../_utils/keycloak/keycloak.service';
-import { ITopic } from '../../_models/topic.model';
+import { IConversationResponseDto } from '../../_models/DTOs/conversation.model';
 import { IToolbarUser } from '../../_models/user.model';
 import { WebsocketService } from '../WebSocketService/websocket.service';
 import { environment } from '../../../environments/environment.development';
@@ -20,7 +20,7 @@ export class ChatService implements OnInit {
     isOnline: false,
     avatarUrl: '',
   });
-  conversations = signal<ITopic[]>([]);
+  conversations = signal<IConversationResponseDto[]>([]);
 
   constructor(
     private http: HttpClient,
@@ -31,33 +31,25 @@ export class ChatService implements OnInit {
   ngOnInit(): void {}
 
   getAllClients() {
-    return this.http.get('http://localhost:8080/api/v1/users');
+    return this.http.get(`${environment.API_URL}/users`);
   }
 
   getAllChats() {
-    return this.http.get<ITopic[]>('http://localhost:8080/api/v1/chats');
+    return this.http.get<IConversationResponseDto[]>(
+      `${environment.API_URL}/chats`
+    );
   }
 
-  // newChat(senderId: string, receiverId: string) {
-  //   return this.http.post<IConversationCreateResponseDto>(
-  //     `http://localhost:8080/api/v1/chat/create/private?receiver-id=${receiverId}`,
-  //     {}
-  //   );
-  // }
-
   setCurrentChat(chat: any) {
-    console.log('Current chat:', chat);
     this.currentChatId.set(chat.id);
-    console.log(chat);
     this.currentReceiverId.set(chat.users[0]);
     this.getMesseges(this.currentChatId()).subscribe((data) => {
-      console.log('Messages:', data);
       this.currentChatMessages.set(data);
     });
     console.log('Current receiver:', this.currentReceiverId());
   }
 
-  setCurrentReceiver(receiverId: ITopic) {
+  setCurrentReceiver(receiverId: IConversationResponseDto) {
     this.currentChatUser.set({
       fullNamed: receiverId.name,
       isOnline: receiverId.recipientOnline,
@@ -68,7 +60,6 @@ export class ChatService implements OnInit {
   getMesseges(chatId: any) {
     return this.http.get(
       `${environment.API_URL}/chat/${this.currentChatId()}/messages`
-      // `${environment.apiUrl}/chat/${chatId}/messages`
     );
   }
 

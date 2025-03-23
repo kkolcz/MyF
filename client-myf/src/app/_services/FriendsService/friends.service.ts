@@ -6,6 +6,7 @@ import { IFriendInvDto } from '../../_models/DTOs/friend-inv.model';
 import { tap } from 'rxjs';
 import { IUser } from '../../_models/user.model';
 import { WebsocketService } from '../WebSocketService/websocket.service';
+import { IBaseReponse } from '../../_models/DTOs/base-reponse.model';
 
 @Injectable({
   providedIn: 'root',
