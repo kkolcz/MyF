@@ -1,10 +1,15 @@
+import Layout from './components/Layout/Layout'
+import Settings from './pages/Settings/Settings'
+import WebChat from './pages/WebChat/WebChat'
 import './styles/App.css'
-import LandingPage from './pages/landingPage.tsx'
 
 function App() {
 	return (
 		<>
-			<LandingPage />
+			<Layout>
+				<WebChat />
+				<Settings />
+			</Layout>
 		</>
 	)
 }
