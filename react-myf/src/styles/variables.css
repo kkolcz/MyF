@@ -1,0 +1,17 @@
+:root {
+	--primary-color: #1a2b45;
+	--secondary-color: #3498db;
+	/* TEXT */
+	--text-primary: #e9e9e9;
+	--text-secondary: #a1a1a1;
+	--text-light: #fff;
+	--text-dark: #000;
+	/* BACKGROUND */
+	--background-primary: #1a2b45;
+	--background-secondary: #3498db;
+	/* FONT */
+	--main-font: 'Arial', sans-serif;
+	--heading-font: 'Helvetica', sans-serif;
+	/* HOVER */
+	--background-hover: #2c3e50;
+}

@@ -1,14 +1,15 @@
 import Layout from './components/Layout/Layout'
 import Settings from './pages/Settings/Settings'
 import WebChat from './pages/WebChat/WebChat'
-import './styles/App.css'
+
+import './styles/global.css'
 
 function App() {
 	return (
 		<>
 			<Layout>
 				<WebChat />
-				<Settings />
+				{/* <Settings /> */}
 			</Layout>
 		</>
 	)

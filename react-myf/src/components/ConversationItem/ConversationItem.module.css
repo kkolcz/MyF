@@ -1,0 +1,66 @@
+p {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	border-bottom: 1px solid var(--secondary-color);
+	padding: 10px;
+	position: relative;
+}
+
+.container:hover {
+	background-color: var(--background-hover);
+	cursor: pointer;
+}
+
+.name {
+	font-size: 16px;
+	font-weight: bold;
+	color: var(--text-primary);
+	margin-bottom: 5px;
+}
+
+.status {
+	font-size: 12px;
+	color: var(--text-secondary);
+}
+
+.lastMessage {
+	font-size: 14px;
+	color: var(--text-secondary);
+	margin-top: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+.lastMessageTime {
+	font-size: 11px;
+	color: var(--text-secondary);
+	margin-top: 3px;
+	align-self: flex-end;
+}
+
+.unreadMessages {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: var(--secondary-color);
+	color: var(--text-primary);
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.unreadMessages p {
+	font-size: 11px;
+	font-weight: bold;
+}
